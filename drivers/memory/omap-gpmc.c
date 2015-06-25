@@ -1856,6 +1856,7 @@ static int gpmc_probe_dt(struct platform_device *pdev)
 			ret = gpmc_probe_onenand_child(pdev, child);
 		else if (of_node_cmp(child->name, "ethernet") == 0 ||
 			 of_node_cmp(child->name, "nor") == 0 ||
+			 of_node_cmp(child->name, "cpld") == 0 ||
 			 of_node_cmp(child->name, "uart") == 0)
 			ret = gpmc_probe_generic_child(pdev, child);
 
