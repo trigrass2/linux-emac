@@ -502,6 +502,7 @@
 	status = "okay";
 	vmmc-supply = <&vmain>;
 	bus-width = <4>;
+	cd-gpios = <&gpio1 12 1>;
 };
 
 &uart0 {
