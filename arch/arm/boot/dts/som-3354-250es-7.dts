@@ -288,7 +288,7 @@
 		ti,x-plate-resistance = <200>;
 		ti,coordinate-readouts = <5>;
 		ti,wire-config = <0x00 0x11 0x22 0x33>;
-		ti,charge-delay = <0x400>;
+		ti,charge-delay = <0x4000>;
 		ti,open-delay = <0x1000>;
 	};
 
