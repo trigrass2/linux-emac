@@ -40,6 +40,18 @@
 			gpios = <&gpio3 4 GPIO_ACTIVE_HIGH>;
 			default-state = "on";
 		};
+
+		led@1 {
+			label = "green-led";
+			gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
+			default-state = "on";
+		};
+
+		led@2 {
+			label = "red-led";
+			gpios = <&gpio1 9 GPIO_ACTIVE_HIGH>;
+			default-state = "on";
+		};
 	};
 
 	vmain: fixedregulator@0 {
@@ -257,6 +269,8 @@
 	leds_pins: pinmux_leds_pins {
 		pinctrl-single,pins = <
 			0x118 (PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* mii1_rxdv.gpio3_4 */
+			0x164 (PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* ecap0_in_pwm0_out.gpio0_7 */
+			0x16c (PIN_OUTPUT_PULLDOWN | MUX_MODE7) /* uart0_rtsn.gpio1_9 */
 		>;
 	};
 
