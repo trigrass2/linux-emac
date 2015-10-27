@@ -64,7 +64,7 @@
 
 	backlight {
 		compatible = "pwm-backlight";
-		pwms = <&ecap2 0 50000 0>;
+		pwms = <&ecap2 0 50000 1>;
 		brightness-levels = <0 51 53 56 62 75 101 152 255>;
 		default-brightness-level = <8>;
 	};
@@ -75,7 +75,7 @@
 		pinctrl-0 = <&lcd_pins>;
 		status = "okay";
 
-		enable-gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
+		enable-gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
 
 		panel-info {
 			ac-bias		= <255>;
