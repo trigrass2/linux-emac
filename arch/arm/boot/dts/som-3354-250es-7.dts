@@ -196,6 +196,8 @@
 			0x15c (PIN_OUTPUT_PULLUP | MUX_MODE7)   /* spi0_cs0 */
 			0x160 (PIN_OUTPUT_PULLUP | MUX_MODE7)   /* spi0_cs1 */
 			0x38  (PIN_OUTPUT_PULLUP | MUX_MODE7)	/* gpmc_ad14.gpio1_14 */
+			0x1e8 (PIN_OUTPUT_PULLUP | MUX_MODE7)	/* emu1.gpio3_8 */
+			0x1a0 (PIN_OUTPUT_PULLUP | MUX_MODE7)	/* mcasp0_aclkr.gpio3_18 */
 		>;
 	};
 
@@ -348,20 +350,27 @@
 
 
 &spi0 {
-	ti,spi-num-cs = <3>;
+	ti,spi-num-cs = <4>;
 	dmas = <&edma 16
 		&edma 17
 		&edma 18
 		&edma 19
 		&edma 20
-		&edma 21>;
-	dma-names = "tx0", "rx0", "tx1", "rx1", "tx2", "rx2";
-
+		&edma 21
+		&edma 22
+		&edma 23>;
+	dma-names = "tx0", "rx0", "tx1", "rx1", "tx2", "rx2", "tx3", "rx3";
 	pinctrl-names = "default";
 	pinctrl-0 = <&spi0_pins>;
 	status = "okay";
-	cs-gpios = <&gpio0 5 0>, <&gpio0 6 0>, <&gpio1 14 0>;
-	
+	cs-gpios = <&gpio0 5 0>, <&gpio0 6 0>, <&gpio1 14 0>, <&gpio3 8 0>;
+
+	spidev3: spidev@3 {
+		compatible = "emac,spidev";
+		reg = <3>;
+		spi-max-frequency = <40000000>;
+		status = "okay";
+	};
 	cs4271: cs4271@2 {
 		compatible = "cirrus,cs4271";
 		spi-cpol;
