@@ -105,6 +105,13 @@
 			>;
 		};
 
+		pinctrl_can1: can1grp {
+			fsl,pins = <
+				MX6QDL_PAD_GPIO_8__FLEXCAN1_RX		0x1b0b0
+				MX6QDL_PAD_GPIO_7__FLEXCAN1_TX		0x1b0b0
+			>;
+		};
+
 		pinctrl_enet: enetgrp {
 			fsl,pins = <
 				MX6QDL_PAD_KEY_COL1__ENET_MDIO          0x1b0b0
@@ -226,6 +233,8 @@
 };
 
 &can1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_can1>;
 	status = "okay";
 };
 
