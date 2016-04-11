@@ -112,6 +112,13 @@
 			>;
 		};
 
+		pinctrl_can2: can2grp {
+			fsl,pins = <
+				MX6QDL_PAD_KEY_COL4__FLEXCAN2_TX	0x1b0b0
+				MX6QDL_PAD_KEY_ROW4__FLEXCAN2_RX	0x1b0b0
+			>;
+		};
+
 		pinctrl_enet: enetgrp {
 			fsl,pins = <
 				MX6QDL_PAD_KEY_COL1__ENET_MDIO          0x1b0b0
@@ -235,6 +242,12 @@
 &can1 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_can1>;
+	status = "okay";
+};
+
+&can2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_can2>;
 	status = "okay";
 };
 
