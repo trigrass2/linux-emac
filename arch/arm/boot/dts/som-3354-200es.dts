@@ -35,7 +35,7 @@
 		compatible = "gpio-leds";
 
 		led@0 {
-			label = "stat";
+			label = "status";
 			gpios = <&gpio3 4 GPIO_ACTIVE_HIGH>;
 			default-state = "on";
 		};
@@ -234,6 +234,10 @@
 
 			0x12c (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* mii1_txclk.gpio3_9 */
 			0x130 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* mii1_rxclk.gpio3_10 */
+			0x90 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* gpmc_advn_ale.gpmc_advn_ale */
+			0x1b4 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* xdma_event_intr1.clkout2 */
+			0x16c (PIN_INPUT_PULLDOWN | MUX_MODE7)  /* uart0_rtsn.d_can1_rx */
+			0x164 (PIN_INPUT_PULLDOWN | MUX_MODE7)  /* eCAP0_in_PWM0_out.eCAP0_in_PWM0_out */
 		>;
 	};
 
