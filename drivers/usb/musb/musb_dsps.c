@@ -43,6 +43,7 @@
 #include <linux/of_device.h>
 #include <linux/of_address.h>
 #include <linux/of_irq.h>
+#include <linux/of_gpio.h>
 #include <linux/usb/of.h>
 
 #include <linux/debugfs.h>
@@ -145,6 +146,7 @@ struct dsps_glue {
 	struct timer_list timer;	/* otg_workaround timer */
 	unsigned long last_timer;    /* last timer data for each instance */
 	bool sw_babble_enabled;
+	int drvgpio;
 
 	struct dsps_context context;
 	struct debugfs_regset32 regset;
@@ -298,6 +300,15 @@ static void otg_timer(unsigned long _musb)
 	spin_unlock_irqrestore(&musb->lock, flags);
 }
 
+static void dsps_musb_set_vbus(struct musb *musb, int is_on)
+{
+	struct device *dev = musb->controller;
+	struct dsps_glue *glue = dev_get_drvdata(dev->parent);
+
+	if (gpio_is_valid(glue->drvgpio))
+		gpio_set_value(glue->drvgpio, is_on);
+}
+
 static irqreturn_t dsps_interrupt(int irq, void *hci)
 {
 	struct musb  *musb = hci;
@@ -368,6 +379,7 @@ static irqreturn_t dsps_interrupt(int irq, void *hci)
 		}
 
 		/* NOTE: this must complete power-on within 100 ms. */
+		dsps_musb_set_vbus(musb, drvvbus);
 		dev_dbg(musb->controller, "VBUS %s (%s)%s, devctl %02x\n",
 				drvvbus ? "on" : "off",
 				usb_otg_state_string(musb->xceiv->otg->state),
@@ -644,6 +656,7 @@ static struct musb_platform_ops dsps_ops = {
 	.try_idle	= dsps_musb_try_idle,
 	.set_mode	= dsps_musb_set_mode,
 	.recover	= dsps_musb_recover,
+	.set_vbus	= dsps_musb_set_vbus,
 };
 
 static u64 musb_dmamask = DMA_BIT_MASK(32);
@@ -789,6 +802,14 @@ static int dsps_probe(struct platform_device *pdev)
 
 	glue->dev = &pdev->dev;
 	glue->wrp = wrp;
+
+	glue->drvgpio = of_get_named_gpio(pdev->dev.of_node, "drv-gpios", 0);
+	if (gpio_is_valid(glue->drvgpio)) {
+		if (devm_gpio_request(&pdev->dev, glue->drvgpio, "drv_gpio"))
+			glue->drvgpio = -EBUSY;
+		else
+			gpio_direction_output(glue->drvgpio, 0);
+	}
 
 	platform_set_drvdata(pdev, glue);
 	pm_runtime_enable(&pdev->dev);

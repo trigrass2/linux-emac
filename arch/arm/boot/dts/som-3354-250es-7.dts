@@ -281,6 +281,12 @@
 			0x19c MUX_MODE4    /* mcasp0_ahclkr.eCAP2_in_PWM2_out */
 		>;
 	};
+
+	usbdrv0_pins: usbdrv0_pins {
+		pinctrl-single,pins = <
+			0x168 (PIN_OUTPUT_PULLDOWN | MUX_MODE7)		/* uart0_ctsn.gpio1_8 */
+		>;
+	};
 };
 
 &lcdc {
@@ -559,7 +565,9 @@
 
 &usb0 {
 	status = "okay";
-	dr_mode = "peripheral";
+	pinctrl-names = "default";
+	pinctrl-0 = <&usbdrv0_pins>;
+	drv-gpios = <&gpio1 8 0>;
 };
 
 &usb1 {
