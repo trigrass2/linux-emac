@@ -50,12 +50,15 @@
 	};
 
 	vmmc: fixedregulator@1 {
+		pinctrl-names = "default";
+		pinctrl-0 = <&vmmc_pins>;
+
 		compatible = "regulator-fixed";
 		regulator-name = "vmmc";
 		regulator-min-microvolt = <3300000>;
 		regulator-max-microvolt = <3300000>;
-		gpio = <&gpio3 7 1
-		&gpio0 18 1>;
+		gpio = <&gpio3 7 GPIO_ACTIVE_HIGH
+			&gpio0 18 GPIO_ACTIVE_HIGH>;
 		enable-active-high;
 		regulator-boot-on;
         };
@@ -285,6 +288,14 @@
 			0x168 (PIN_OUTPUT_PULLDOWN | MUX_MODE7)		/* uart0_ctsn.gpio1_8 */
 		>;
 	};
+
+	vmmc_pins: vmmc_pins {
+		pinctrl-single,pins = <
+			0x21c (PIN_OUTPUT | MUX_MODE7)      /* usb0_drvvbus.gpio0[18] */
+			0x1e4 (PIN_OUTPUT | MUX_MODE7)      /* emu0.gpio3[7] */
+		>;
+	};
+
 };
 
 &lcdc {
