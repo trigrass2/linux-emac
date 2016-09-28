@@ -26,5 +26,4 @@ config EMAC_CPLD_COUNTER
 	depends on HAS_IOMEM
 	help
 	  Say yes here to build support for the simple counters in EMAC CPLDs.
-
 endmenu
