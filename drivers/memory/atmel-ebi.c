@@ -694,6 +694,10 @@ static int at91_ebi_probe(struct platform_device *pdev)
 
 	ebi->clk = clk;
 
+	ret = clk_prepare_enable(ebi->clk);
+	if (ret)
+		return ret;
+
 	ebi->smc = syscon_regmap_lookup_by_phandle(np, "atmel,smc");
 	if (IS_ERR(ebi->smc))
 		return PTR_ERR(ebi->smc);
