@@ -1,0 +1,209 @@
+/*
+ * Copyright 2016 EMAC Inc.
+ * Copyright 2016 QWERTY Embedded Design
+ *
+ * Author: Michael Welling <mwelling@ieee.org>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ *
+ */
+
+/dts-v1/;
+#include "imx6q.dtsi"
+#include "som-imx6dq.dtsi"
+#include <dt-bindings/sound/fsl-imx-audmux.h>
+
+/ {
+	model = "EMAC SOM-iMX6 Quad with SOM-350ES";
+	compatible = "emac,som-imx6q-350es", "fsl,imx6q";
+
+	chosen {
+		stdout-path = &uart2;
+	};
+
+	memory {
+		device_type = "memory";
+		reg = <0x10000000 0x80000000>;
+	};
+
+	clocks {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		tlv320_mclk: tlv320_mclk {
+			#clock-cells = <0>;
+			compatible = "fixed-clock";
+			clock-frequency = <12000000>;
+			clock-output-names = "mclk";
+		};
+	};
+
+/*
+	sound {
+		compatible = "simple-audio-card";
+		simple-audio-card,name = "imx6-aic32x4";
+		simple-audio-card,format = "i2s";
+		simple-audio-card,bitclock-master = <&codec_master>;
+		simple-audio-card,frame-master = <&codec_master>;
+		simple-audio-card,widgets =
+			"Microphone", "Microphone Jack",
+			"Headphone", "Headphone Jack",
+			"Speaker", "Speaker Ext",
+			"Line", "Line In Jack";
+		simple-audio-card,routing =
+			"Headphone Jack", "HPL",
+			"Headphone Jack", "HPR",
+			"IN1_L", "Mic Jack",
+			"IN1_R", "Mic Jack",
+			"Mic Jack", "Mic Bias";
+		simple-audio-card,cpu {
+			sound-dai = <&ssi1>;
+		};
+
+		codec_master: simple-audio-card,codec {
+			sound-dai = <&codec>;
+		};
+	};
+*/
+
+	sound {
+		compatible = "fsl,imx-audio-aic32x4";
+		model = "tlv320aic32x4";
+		audio-codec = <&codec>;
+		ssi-controller = <&ssi1>;
+		audio-routing =
+			"Headphone Jack", "HPL",
+			"Headphone Jack", "HPR",
+			"IN1_L", "Mic Jack",
+			"IN1_R", "Mic Jack",
+			"Mic Jack", "Mic Bias";
+		mux-ext-port = <4>;
+		mux-int-port = <1>;
+	};
+
+	panel {
+		compatible = "innolux,zj070na-01p";
+
+		port {
+			panel_in: endpoint {
+				remote-endpoint = <&lvds0_out>;
+			};
+		};
+	};
+};
+
+&audmux {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_audmux>;
+	status = "okay";
+/*	ssi1 {
+		fsl,audmux-port = <0>;
+		fsl,port-config = <
+			(IMX_AUDMUX_V2_PTCR_SYN |
+			IMX_AUDMUX_V2_PTCR_TFSEL(3) |
+			IMX_AUDMUX_V2_PTCR_TFSDIR |
+			IMX_AUDMUX_V2_PTCR_TCLKDIR |
+			IMX_AUDMUX_V2_PTCR_TCSEL(3))
+			IMX_AUDMUX_V2_PDCR_RXDSEL(3)
+		>;
+	};
+
+	pins5 {
+		fsl,audmux-port = <3>;
+		fsl,port-config = <
+			IMX_AUDMUX_V2_PTCR_SYN
+			IMX_AUDMUX_V2_PDCR_RXDSEL(0)
+		>;
+	};
+*/
+};
+
+&ldb {
+	status = "okay";
+
+	lvds-channel@0 {
+		fsl,data-mapping = "spwg";
+		fsl,data-width = <18>;
+		status = "okay";
+
+		port@4 {
+			reg = <4>;
+
+			lvds0_out: endpoint {
+				remote-endpoint = <&panel_in>;
+			};
+		};
+	};
+};
+
+&i2c2 {
+	codec: tlv320aic32x4@18{
+		compatible = "ti,tlv320aic32x4";
+		#sound-dai-cells = <0>;
+		reg = <0x18>;
+		clocks = <&tlv320_mclk>;
+		clock-names = "mclk";
+		iov-supply = <&reg_3p3v>;
+		ldoin-supply = <&reg_3p3v>;
+		input-use = <1 1 0 0 0 0>;
+		cmode = <0x11 0>;
+		status = "okay";
+	};
+};
+
+&iomuxc {
+	pinctrl-0 = <&pinctrl_hog>;
+
+	imx6qdl-tfc {
+		pinctrl_hog: hoggrp {
+			fsl,pins = <
+				MX6QDL_PAD_GPIO_0__CCM_CLKO1		0x130b0		/* GPIO_0_CLKO */
+				//MX6QDL_PAD_GPIO_2__GPIO1_IO02		0x80000000	/* uSDHC1 CD */
+				//MX6QDL_PAD_EIM_DA9__GPIO3_IO09		0x80000000	/* uSDHC3 CD */
+				MX6QDL_PAD_DISP0_DAT11__GPIO5_IO05      0x80000000      /* WIFI_ON (reset, active low) */
+				//MX6QDL_PAD_ENET_RXD1__GPIO1_IO26	0x000b0		/* WL_REG_ON (unused) */
+				//MX6QDL_PAD_ENET_TXD1__GPIO1_IO29	0x80000000	/* WL_HOST_WAKE, input */
+				//MX6QDL_PAD_CSI0_DAT13__GPIO5_IO31	0x0f0b0		/* GPIO5_IO31 (Wifi Power Enable) */
+				//MX6QDL_PAD_ENET_TXD0__GPIO1_IO30	0x80000000	/* WL_WAKE (unused) */
+				//MX6QDL_PAD_CSI0_VSYNC__GPIO5_IO21	0x80000000	/* BT_ON */
+				//MX6QDL_PAD_CSI0_DAT12__GPIO5_IO30	0x80000000	/* BT_WAKE */
+				//MX6QDL_PAD_CSI0_DATA_EN__GPIO5_IO20	0x80000000	/* BT_HOST_WAKE */
+				//MX6QDL_PAD_EIM_D29__GPIO3_IO29		0x80000000	/* RGMII_nRST */
+			>;
+		};
+	};
+};
+
+&usdhc2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_usdhc2>;
+/*	status = "okay";*/
+};
+
+
+&usdhc4 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_usdhc4>;
+//	status = "okay";
+	vmmc-supply = <&reg_3p3v>;
+//	voltage-ranges = <1800 1800>;
+        cap-power-off-card;
+        keep-power-in-suspend;
+	no-1-8-v;
+	enable-sdio-wakeup;
+	non-removable;
+        #address-cells = <1>;
+        #size-cells = <0>;
+        wlcore: wlcore@0 {
+                compatible = "ti,wl1835";
+                reg = <0x2>;
+                interrupt-parent = <&gpio1>;
+                interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
+	};
+};
+
+&sata {
+	status = "okay";
+};
