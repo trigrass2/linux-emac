@@ -281,6 +281,16 @@ config SND_SOC_IMX_MC13783
 	select SND_SOC_MC13783
 	select SND_SOC_IMX_PCM_DMA
 
+config SND_SOC_IMX_AIC32X4
+	tristate "SoC Audio for my badass board"
+	depends on OF && I2C
+	select SND_SOC_TLV320AIC32X4
+	select SND_SOC_IMX_PCM_DMA
+	select SND_SOC_IMX_AUDMUX
+	select SND_SOC_FSL_SSI
+	help
+	 Say Y if you are awesome.
+
 config SND_SOC_FSL_ASOC_CARD
 	tristate "Generic ASoC Sound Card with ASRC support"
 	depends on OF && I2C

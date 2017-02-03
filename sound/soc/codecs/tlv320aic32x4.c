@@ -310,6 +310,8 @@ static const struct snd_soc_dapm_widget aic32x4_dapm_widgets[] = {
 	SND_SOC_DAPM_OUTPUT("HPR"),
 	SND_SOC_DAPM_OUTPUT("LOL"),
 	SND_SOC_DAPM_OUTPUT("LOR"),
+	SND_SOC_DAPM_INPUT("CM_L"),
+	SND_SOC_DAPM_INPUT("CM_R"),
 	SND_SOC_DAPM_INPUT("IN1_L"),
 	SND_SOC_DAPM_INPUT("IN1_R"),
 	SND_SOC_DAPM_INPUT("IN2_L"),
