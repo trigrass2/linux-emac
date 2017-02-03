@@ -200,6 +200,15 @@ config KEYBOARD_EP93XX
 	  To compile this driver as a module, choose M here: the
 	  module will be called ep93xx_keypad.
 
+config KEYBOARD_EMAC_CPLD
+	tristate "EMAC CPLD Keypad Support"
+	select INPUT_MATRIXKMAP
+	help
+	  Say Y here to enable the matrix keyboard used by EMAC carriers.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called emac_keypad.
+
 config KEYBOARD_GPIO
 	tristate "GPIO Buttons"
 	depends on GPIOLIB || COMPILE_TEST
