@@ -1062,6 +1062,7 @@ static int mmc_select_hs_ddr(struct mmc_card *card)
 			EXT_CSD_BUS_WIDTH,
 			ext_csd_bits,
 			card->ext_csd.generic_cmd6_time);
+
 	if (err) {
 		pr_err("%s: switch to bus width %d ddr failed\n",
 			mmc_hostname(host), 1 << bus_width);
