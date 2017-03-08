@@ -67,6 +67,19 @@
 		};
 	};
 */
+	regulators {
+		wlan_en_reg: regulator@2 {
+		        compatible = "regulator-fixed";
+		        reg = <2>;
+		        regulator-name = "wlan-en-regulator";
+		        regulator-min-microvolt = <1800000>;
+		        regulator-max-microvolt = <3300000>;
+		        gpio = <&gpio5 6 0>;
+		        regulator-always-on;
+		        startup-delay-us = <70000>;
+		        enable-active-high;
+		};
+	};
 
 	sound {
 		compatible = "fsl,imx-audio-aic32x4";
@@ -186,21 +199,19 @@
 &usdhc4 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_usdhc4>;
-//	status = "okay";
-	vmmc-supply = <&reg_3p3v>;
-//	voltage-ranges = <1800 1800>;
+	status = "okay";
+	vmmc-supply = <&wlan_en_reg>;
         cap-power-off-card;
         keep-power-in-suspend;
-	no-1-8-v;
 	enable-sdio-wakeup;
-	non-removable;
+
         #address-cells = <1>;
         #size-cells = <0>;
         wlcore: wlcore@0 {
                 compatible = "ti,wl1835";
                 reg = <0x2>;
                 interrupt-parent = <&gpio1>;
-                interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
+                interrupts = <6 IRQ_TYPE_LEVEL_HIGH>;
 	};
 };
 
