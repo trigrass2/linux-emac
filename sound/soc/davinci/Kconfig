@@ -1,5 +1,5 @@
 config SND_DAVINCI_SOC
-	tristate
+tristate
 	depends on ARCH_DAVINCI
 	select SND_EDMA_SOC
 
@@ -103,4 +103,12 @@ config  SND_DA850_SOC_EVM
 	help
 	  Say Y if you want to add support for SoC audio on TI
 	  DA850/OMAP-L138 EVM
+
+config SND_SOM3354
+	tristate "SoC Audio for the SOM-SOM3354"
+	depends on SND_EDMA_SOC && SOC_AM33XX && SPI_MASTER
+	select SND_SOC_CS4271_SPI
+	select SND_DAVINCI_SOC_MCASP
+	help
+	  Say Y or M if you want to add support for audio on SoM-3354
 
