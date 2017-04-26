@@ -366,6 +366,33 @@ static const struct clk_ops si5351_vxco_ops = {
  *         = (MSNx_P1*MSNx_P3 + MSNx_P2 + 512*MSNx_P3)/(128*MSNx_P3)
  *
  */
+
+static int si5351_pll_reset(struct si5351_hw_data *hwdata)
+{
+	unsigned long timeout;
+	u8 mask = (hwdata->num == 0) ?
+		SI5351_STATUS_LOL_A : SI5351_STATUS_LOL_B;
+
+	si5351_reg_write(hwdata->drvdata, SI5351_PLL_RESET,
+			 (hwdata->num == 0) ? SI5351_PLL_RESET_A :
+			 SI5351_PLL_RESET_B);
+	timeout = jiffies + msecs_to_jiffies(100);
+	do {
+		if ((si5351_reg_read(hwdata->drvdata, SI5351_DEVICE_STATUS) &
+		     mask) == 0)
+			break;
+		if (time_after(jiffies, timeout)) {
+			dev_err(&hwdata->drvdata->client->dev,
+				"timeout waiting for pll %d reset\n",
+				hwdata->num);
+			return -EBUSY;
+		};
+		udelay(250);
+	} while (true);
+
+	return 0;
+}
+
 static int _si5351_pll_reparent(struct si5351_driver_data *drvdata,
 				int num, enum si5351_pll_src parent)
 {
@@ -518,6 +545,9 @@ static int si5351_pll_set_rate(struct clk_hw *hw, unsigned long rate,
 	si5351_set_bits(hwdata->drvdata, SI5351_CLK6_CTRL + hwdata->num,
 		SI5351_CLK_INTEGER_MODE,
 		(hwdata->params.p2 == 0) ? SI5351_CLK_INTEGER_MODE : 0);
+
+	/* reset pll after rate change */
+	si5351_pll_reset(hwdata);
 
 	dev_dbg(&hwdata->drvdata->client->dev,
 		"%s - %s: p1 = %lu, p2 = %lu, p3 = %lu, parent_rate = %lu, rate = %lu\n",
@@ -742,6 +772,8 @@ static long si5351_msynth_round_rate(struct clk_hw *hw, unsigned long rate,
 		hwdata->params.p1 += (128 * b / c);
 		hwdata->params.p1 -= 512;
 	}
+
+	mdelay(100);/* This one is magic. but why?!? */
 
 	dev_dbg(&hwdata->drvdata->client->dev,
 		"%s - %s: a = %lu, b = %lu, c = %lu, divby4 = %d, parent_rate = %lu, rate = %lu\n",
