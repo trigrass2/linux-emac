@@ -54,6 +54,7 @@ struct titsc {
 	u32			inp_xp, inp_xn, inp_yp, inp_yn;
 	u32			step_mask;
 	u32			charge_delay;
+	u32                     open_delay;
 };
 
 static unsigned int titsc_readl(struct titsc *ts, unsigned int reg)
@@ -148,7 +149,7 @@ static void titsc_step_config(struct titsc *ts_dev)
 	end_step = first_step + tsc_steps;
 	for (i = end_step - ts_dev->coordinate_readouts; i < end_step; i++) {
 		titsc_writel(ts_dev, REG_STEPCONFIG(i), config);
-		titsc_writel(ts_dev, REG_STEPDELAY(i), STEPCONFIG_OPENDLY);
+		titsc_writel(ts_dev, REG_STEPDELAY(i), ts_dev->open_delay);
 	}
 
 	config = 0;
@@ -172,7 +173,7 @@ static void titsc_step_config(struct titsc *ts_dev)
 	end_step = first_step + ts_dev->coordinate_readouts;
 	for (i = first_step; i < end_step; i++) {
 		titsc_writel(ts_dev, REG_STEPCONFIG(i), config);
-		titsc_writel(ts_dev, REG_STEPDELAY(i), STEPCONFIG_OPENDLY);
+		titsc_writel(ts_dev, REG_STEPDELAY(i), ts_dev->open_delay);
 	}
 
 	/* Make CHARGECONFIG same as IDLECONFIG */
@@ -188,13 +189,13 @@ static void titsc_step_config(struct titsc *ts_dev)
 			STEPCONFIG_INP(ts_dev->inp_xp);
 	titsc_writel(ts_dev, REG_STEPCONFIG(end_step), config);
 	titsc_writel(ts_dev, REG_STEPDELAY(end_step),
-			STEPCONFIG_OPENDLY);
+			ts_dev->open_delay);
 
 	end_step++;
 	config |= STEPCONFIG_INP(ts_dev->inp_yn);
 	titsc_writel(ts_dev, REG_STEPCONFIG(end_step), config);
 	titsc_writel(ts_dev, REG_STEPDELAY(end_step),
-			STEPCONFIG_OPENDLY);
+			ts_dev->open_delay);
 
 	/* The steps end ... end - readouts * 2 + 2 and bit 0 for TS_Charge */
 	stepenable = 1;
@@ -300,7 +301,7 @@ static irqreturn_t titsc_irq(int irq, void *dev)
 
 		titsc_read_coordinates(ts_dev, &x, &y, &z1, &z2);
 
-		if (ts_dev->pen_down && z1 != 0 && z2 != 0) {
+		if (ts_dev->pen_down && z1 > 50 && z2 != 0) {
 			/*
 			 * Calculate pressure using formula
 			 * Resistance(touch) = x plate resistance *
@@ -389,6 +390,17 @@ static int titsc_parse_dt(struct platform_device *pdev,
 		ts_dev->charge_delay = CHARGEDLY_OPENDLY;
 		dev_warn(&pdev->dev, "ti,charge-delay not specified\n");
 	}
+
+       err = of_property_read_u32(node, "ti,open-delay",
+                                  &ts_dev->open_delay);
+       /*
+        * If ti,open-delay value is not specified, then use
+        * STEPCONFIG_OPENDLY as the default value.
+        */
+       if (err < 0) {
+               ts_dev->open_delay = STEPCONFIG_OPENDLY;
+       }
+
 
 	return of_property_read_u32_array(node, "ti,wire-config",
 			ts_dev->config_inp, ARRAY_SIZE(ts_dev->config_inp));
