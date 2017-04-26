@@ -1,0 +1,324 @@
+/*
+ * Copyright (C) 2017 EMAC Inc. - www.emacinc.com
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+#include "am3517.dtsi"
+
+/ {
+	compatible = "emac,som3517", "ti,am3517", "ti,omap3";
+
+	memory {
+		device_type = "memory";
+		reg = <0x80000000 0x20000000>; /* 512 MB */
+	};
+
+	leds {
+		compatible = "gpio-leds";
+
+		status {
+			label = "status";
+			gpios = <&gpio1 25 GPIO_ACTIVE_HIGH>;
+			default-state = "on";
+		};
+	};
+
+	vmmc_fixed: vmmc {
+		compatible = "regulator-fixed";
+		regulator-name = "vmmc_fixed";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+        };
+
+	aliases {
+		display0 = &lcd0;
+	};
+
+	backlight0: backlight {
+		compatible = "gpio-backlight";
+		gpios = <&gpio5 18 GPIO_ACTIVE_HIGH>;   /* gpio146 */
+		default-on;
+	};
+
+	lcd0: display {
+		compatible = "panel-dpi";
+		vcc-supply = <&reg_3p3v>;
+		label = "lcd";
+		panel-timing {
+			clock-frequency = <9000000>;
+
+			hback-porch = <1>;
+			hactive = <480>;
+			hfront-porch = <44>;
+			hsync-len = <45>;
+
+			vback-porch = <1>;
+			vactive = <272>;
+			vfront-porch = <13>;
+			vsync-len = <14>;
+
+			hsync-active = <0>;
+			vsync-active = <0>;
+			de-active = <1>;
+			pixelclk-active = <1>;
+		};
+
+		port {
+			lcd_in: endpoint {
+				remote-endpoint = <&dpi_out>;
+			};
+		};
+	};
+
+	reg_3p3v: vcc3 {
+		compatible = "regulator-fixed";
+		regulator-name = "3P3V";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		regulator-always-on;
+	};
+
+	hsusb1_phy: hsusb1_phy {
+		compatible = "usb-nop-xceiv";
+		//reg = <0>;
+		//#phy-cells = <1>;
+		vcc-supply = <&reg_3p3v>;
+		reset-gpios = <&gpio2 25 GPIO_ACTIVE_LOW>;      /* gpio_57 */
+       };
+
+	hsusb2_phy: hsusb2_phy {
+		compatible = "usb-nop-xceiv";
+		//reg = <1>;
+		#phy-cells = <0>;
+		vcc-supply = <&reg_3p3v>;
+		reset-gpios = <&gpio2 25 GPIO_ACTIVE_LOW>;      /* gpio_57 */
+	};
+
+	clocks {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		cs4271_mclk: cs4271_mclk {
+			compatible = "fixed-clock";
+			#clock-cells = <0>;
+			clock-frequency = <12288000>;
+			clock-output-names = "mclk";
+		};
+	};
+
+	clock_gpio: clock_gpio {
+		compatible = "gpio-gate-clock";
+		clocks = <&cs4271_mclk>;
+		#clock-cells = <0>;
+		enable-gpios = <&gpio5 28 GPIO_ACTIVE_HIGH>;
+	};
+
+	sound {
+		compatible = "emac,som3354-cs4271-snd";
+		ti,model = "SOM3517 CS4271";
+		ti,audio-codec = <&cs4271>;
+		ti,mcasp-controller = <&mcbsp2>;
+		ti,codec-clock-rate = <12288000>;
+		clocks = <&clock_gpio>;
+		clock-names = "mclk";
+		ti,audio-routing =
+			"Line Out",       "AOUTA+",
+			"Line Out",       "AOUTA-",
+			"Line Out",       "AOUTB+",
+			"Line Out",       "AOUTB-";
+	};
+};
+
+&omap3_pmx_core {
+	pinctrl-names = "default";
+
+	mcspi1_pins: pinmux_mcspi1_pins {
+		pinctrl-single,pins = <
+			OMAP3_CORE1_IOPAD(0x21c8, PIN_INPUT | MUX_MODE0)	/* mcspi1_clk.mcspi1_clk */
+			OMAP3_CORE1_IOPAD(0x21ca, PIN_OUTPUT | MUX_MODE0)	/* mcspi1_simo.mcspi1_simo */
+			OMAP3_CORE1_IOPAD(0x21cc, PIN_INPUT_PULLUP | MUX_MODE0)	/* mcspi1_somi.mcspi1_somi */
+			OMAP3_CORE1_IOPAD(0x21ce, PIN_OUTPUT | MUX_MODE0)	/* mcspi1_cs0.mcspi1_cs0 */
+		>;
+	};
+
+	uart2_pins: pinxmux_uart2_pins {
+		pinctrl-single,pins = <
+			OMAP3_CORE1_IOPAD(0x216c, PIN_INPUT | MUX_MODE4)	    /* mcbsp3_dx.uart2_cts */
+			OMAP3_CORE1_IOPAD(0x216e, PIN_OUTPUT_PULLUP | MUX_MODE4)    /* mcbsp3_dr.uart2_rts */
+			OMAP3_CORE1_IOPAD(0x2170, PIN_OUTPUT_PULLUP | MUX_MODE1)    /* mcbsp3_clk.uart2_tx */
+			OMAP3_CORE1_IOPAD(0x2172, PIN_INPUT_PULLUP | MUX_MODE1)	    /* mcbsp3_fsx.uart2_rx */
+		>;
+	};
+
+	uart4_pins: pinxmux_uart4_pins {
+		pinctrl-single,pins = <
+			OMAP3_CORE1_IOPAD(0x20CE, PIN_OUTPUT_PULLUP | MUX_MODE1)  /* gmpc_wait1.uart4_tx*/
+			OMAP3_CORE1_IOPAD(0x20D0, PIN_INPUT_PULLUP | MUX_MODE1)   /* gmpc_wait2.uart4_rx */
+			OMAP3_CORE1_IOPAD(0x21E8, PIN_OUTPUT_PULLUP | MUX_MODE2)  /* ccdc_hd_simo.uart4_rts */
+			OMAP3_CORE1_IOPAD(0x21EA, PIN_INPUT_PULLUP | MUX_MODE2)   /* ccdc_vd.uart4_cts */
+		>;
+	};
+
+	gpio6_pins: pinmux_gpio6_pins {
+		pinctrl-single,pins = <
+			OMAP3_CORE1_IOPAD(0x21c6, PIN_OUTPUT | MUX_MODE4)   /* hdq_sio.gpio_170 */
+			OMAP3_CORE1_IOPAD(0x21d6, PIN_OUTPUT | MUX_MODE4)   /* mcspi2_clk.gpio_178 */
+			OMAP3_CORE1_IOPAD(0x21c2, PIN_OUTPUT | MUX_MODE4)   /* i2c3_scl.gpio_184 */
+			OMAP3_CORE1_IOPAD(0x21c4, PIN_OUTPUT | MUX_MODE4)   /* i2c3_sda.gpio_185 */
+			OMAP3_CORE1_IOPAD(0x2184, PIN_OUTPUT | MUX_MODE4)   /* mcbsp4_clkx.gpio_152 */
+		>;
+	};
+
+	otg_drv_vbus: pinmux_otg_drv_vbus {
+		pinctrl-single,pins = <
+			OMAP3_CORE1_IOPAD(0x2210, PIN_INPUT_PULLDOWN | MUX_MODE0) /* rmii_50MHz_clk.usb0_drvvbus */
+		>;
+	};
+};
+
+&gpio6 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&gpio6_pins>;
+	status = "ok";
+};
+
+&lcd0 {
+	enable-gpios = <&gpio5 19 GPIO_ACTIVE_HIGH >;   /* gpio147 */
+};
+
+&dss {
+	status = "ok";
+	port {
+		dpi_out: endpoint {
+			remote-endpoint = <&lcd_in>;
+			data-lines = <24>;
+		};
+	};
+};
+
+&davinci_emac {
+	status = "okay";
+};
+
+&davinci_mdio {
+	status = "okay";
+};
+
+&mcbsp1 {
+	status = "disabled";
+};
+
+&mcbsp2 {
+	status = "okay";
+};
+
+&uart2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart2_pins>;
+	rts-gpio = <&gpio5 13 GPIO_ACTIVE_HIGH>;
+	rs485-rts-active-high;
+	rs485-rts-delay = <1 1>;
+	status = "okay";
+};
+
+&uart4 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart4_pins>;
+	status = "okay";
+};
+
+&usb_otg_hs {
+	interface-type = <0>;
+	mode = <3>;
+	power = <50>;
+	status = "okay";
+	phys = <&hsusb2_phy>;
+	usb-phy = <&hsusb2_phy>;
+	phy-names = "usb2-phy";
+	pinctrl-0 = <&otg_drv_vbus>;
+};
+
+
+&usbhshost {
+	port1-mode = "ehci-phy";
+       //port2-mode = "ehci-phy";
+       //single-ulpi-bypass;
+};
+
+&usbhsehci {
+	phys = <&hsusb1_phy &hsusb2_phy>;
+};
+
+&i2c1 {
+	clock-frequency = <400000>;
+
+	pcf8563@51 {
+		compatible = "nxp,pcf8563";
+		reg = <0x51>;
+	};
+
+	touchscreen: tsc2004@4b {
+		compatible = "ti,tsc2004";
+		reg = <0x4b>;
+		vio-supply = <&reg_3p3v>;
+		interrupts-extended = <&gpio5 29 IRQ_TYPE_EDGE_FALLING>;
+		status = "okay";
+	};
+};
+
+&i2c2 {
+	clock-frequency = <400000>;
+	status="okay";
+};
+
+&i2c3 {
+	status="disabled";
+};
+
+&mcspi1 {
+	spidev@0 {
+		compatible = "emac,spidev";
+		spi-max-frequency = <48000000>;
+		reg = <0>;
+	};
+
+	spidev@1 {
+		compatible = "emac,spidev";
+		spi-max-frequency = <48000000>;
+		reg = <1>;
+	};
+	spidev@3 {
+		compatible = "emac,spidev";
+		spi-max-frequency = <48000000>;
+		reg = <3>;
+	};
+
+	cs4271: cs4271@2 {
+		compatible = "cirrus,cs4271";
+		spi-max-frequency = <1000000>;
+		reg = <2>;
+		status = "okay";
+	};
+};
+
+&mmc1 {
+	vmmc-supply = <&vmmc_fixed>;
+	bus-width = <4>;
+	mmc-cap-mmc-highspeed;
+	status = "okay";
+	ti,non-removable;
+};
+
+&mmc2 {
+	vmmc-supply = <&vmmc_fixed>;
+	bus-width = <4>;
+	status = "okay";
+	cd-gpios = <&gpio4 31 IRQ_TYPE_LEVEL_LOW>;
+};
+
+&mmc3 {
+	status = "disabled";
+};
