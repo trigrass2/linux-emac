@@ -47,14 +47,6 @@
 		regulator-boot-on;
 	};
 
-	adc_vref: fixedregulator@1 {
-		compatible = "regulator-fixed";
-		regulator-name = "adc_vref";
-		regulator-min-microvolt = <4096000>;
-		regulator-max-microvolt = <4096000>;
-		regulator-boot-on;
-	};
-
 	backlight {
 		compatible = "pwm-backlight";
 		pwms = <&ecap2 0 50000 0>;
@@ -479,41 +471,6 @@
 
 	tps: tps@2d {
 		reg = <0x2d>;
-	};
-
-	dac1: ad5665@10 {
-		compatible = "ad,ad5665";
-		reg = <0x10>;
-		vref-supply = <&adc_vref>;
-	};
-
-	dac2: ad5665@13 {
-		compatible = "ad,ad5665";
-		reg = <0x13>;
-		vref-supply = <&adc_vref>;
-	};
-
-	dac3: ad5665@1a {
-		compatible = "ad,ad5665";
-		reg = <0x1a>;
-		vref-supply = <&adc_vref>;
-	};
-
-	adc1: max11614@33 {
-		compatible = "maxim,max11614";
-		reg = <0x33>;
-		vref-supply = <&adc_vref>;
-		vcc-supply = <&vmain>;
-	};
-
-	maxgpio1: max7300@40 {
-		compatible = "maxim,max7300";
-		reg = <0x40>;
-	};
-
-	maxgpio2: max7300@41 {
-		compatible = "maxim,max7300";
-		reg = <0x41>;
 	};
 
 	si5351: clock-generator {
