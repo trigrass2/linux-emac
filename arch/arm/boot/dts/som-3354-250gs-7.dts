@@ -1,0 +1,144 @@
+/*
+ * som-3354-250gs-7.dts - Device Tree file for the SOM-3354M with SOM-250GS
+ *                        w/ 7 inch display
+ *
+ * Copyright (C) 2017 EMAC Inc.
+ * Copyright (C) 2017 QWERTY Embedded Design
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+/dts-v1/;
+
+#include "som-3354.dtsi"
+
+/ {
+	model = "EMAC SOM-3354M SOM-250GS E7";
+
+	leds {
+		pinctrl-names = "default";
+		pinctrl-0 = <&leds_pins>;
+
+		compatible = "gpio-leds";
+
+		led@1 {
+			label = "green-led";
+			gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
+			default-state = "on";
+		};
+
+		led@2 {
+			label = "red-led";
+			gpios = <&gpio1 9 GPIO_ACTIVE_HIGH>;
+			default-state = "on";
+		};
+	};
+
+	backlight {
+		compatible = "pwm-backlight";
+		pwms = <&ecap2 0 50000 0>;
+		enable-gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
+		brightness-levels = <0 51 53 56 62 75 101 152 255>;
+		default-brightness-level = <8>;
+	};
+
+	regulators {
+		compatible = "simple-bus";
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		reg_3p3v: regulator@0 {
+			compatible = "regulator-fixed";
+			reg = <0>;
+			regulator-name = "3P3V";
+			regulator-min-microvolt = <3300000>;
+			regulator-max-microvolt = <3300000>;
+			regulator-always-on;
+		};
+	};
+
+	panel {
+		compatible = "ti,tilcdc,panel";
+		pinctrl-names = "default";
+		pinctrl-0 = <&lcd_pins>;
+		status = "okay";
+
+		enable-gpios = <&gpio1 20 GPIO_ACTIVE_HIGH>;
+
+		panel-info {
+			ac-bias		= <255>;
+			ac-bias-intrpt	= <0>;
+			dma-burst-sz	= <16>;
+			bpp		= <16>;
+			fdd		= <0x80>;
+			tft-alt-mode	= <0>;
+			stn-565-mode	= <0>;
+			mono-8bit-mode	= <0>;
+			sync-edge	= <0>;
+			sync-ctrl	= <0>;
+			raster-order	= <1>;
+			fifo-th		= <0>;
+		};
+
+		display-timings {
+			native-mode = <&timing1>;
+			timing1: 800x480 {
+				hactive		= <800>;
+				vactive		= <480>;
+				hback-porch     = <86>;
+				hfront-porch    = <42>;
+				hsync-len       = <128>;
+				vback-porch     = <33>;
+				vfront-porch    = <10>;
+				vsync-len       = <2>;
+				clock-frequency = <32000000>;
+				hsync-active    = <0>;
+				vsync-active    = <0>;
+				de-active = <1>;
+				pixelclk-active = <1>;
+			};
+		};
+	};
+
+	sound {
+		compatible = "simple-audio-card";
+		simple-audio-card,format = "i2s";
+		simple-audio-card,name = "som-250gs sgtl5000";
+		simple-audio-card,widgets =
+			"Microphone", "Microphone Jack",
+			"Headphone", "Headphone Jack",
+			"Speaker", "Speaker Ext",
+			"Line", "Line In Jack";
+		simple-audio-card,routing =
+			"MIC_IN", "Microphone Jack",
+			"Microphone Jack", "Mic Bias",
+			"LINE_IN", "Line In Jack",
+			"Headphone Jack", "HP_OUT",
+			"Speaker Ext", "LINE_OUT";
+
+		simple-audio-card,cpu {
+			sound-dai = <&mcasp0>;
+		};
+
+		sound_master: simple-audio-card,codec {
+			sound-dai = <&codec>;
+			frame-master;
+			bitclock-master;
+		};
+	};
+};
+
+&i2c0 {
+	status = "okay";
+
+	codec: sgtl5000@0a {
+		#sound-dai-cells = <0>;
+		compatible = "fsl,sgtl5000";
+		reg = <0x0a>;
+		VDDA-supply = <&reg_3p3v>;
+		VDDIO-supply = <&reg_3p3v>;
+		clocks = <&si5351 2>;
+	};
+};

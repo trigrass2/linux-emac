@@ -570,7 +570,8 @@ dtb-$(CONFIG_SOC_AM33XX) += \
         som-3354-210es.dtb \
         som-3354-212es.dtb \
         som-3354-250es-7.dtb \
-        som-3354-250es-10.dtb
+        som-3354-250es-10.dtb \
+        som-3354-250gs-7.dtb
 dtb-$(CONFIG_ARCH_OMAP4) += \
 	omap4-duovero-parlor.dtb \
 	omap4-kc1.dtb \
