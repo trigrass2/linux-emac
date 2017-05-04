@@ -127,4 +127,11 @@
 		VDDIO-supply = <&reg_3p3v>;
 		clocks = <&clock_gpio>;
 	};
+
+	eeprom@50 {
+		compatible = "st,24c32";
+		reg = <0x50>;
+		pagesize = <32>;
+	};
+
 };
