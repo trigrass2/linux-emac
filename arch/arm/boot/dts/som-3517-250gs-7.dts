@@ -41,9 +41,18 @@
 		};
 	};
 
+	lvds_3p3v: lvds_3p3v_reg {
+		   compatible = "regulator-gpio";
+		   regulator-name = "LVDS 3P3V";
+		   regulator-min-microvolt = <3300000>;
+		   regulator-max-microvolt = <3300000>;
+		   regulator-boot-on;
+		   enable-gpio = <&gpio6 22 GPIO_ACTIVE_HIGH>;
+	   };
+
 	lcd0: display {
 		compatible = "panel-dpi";
-		vcc-supply = <&reg_3p3v>;
+		vcc-supply = <&lvds_3p3v>;
 		label = "lcd";
 		panel-timing {
 			hactive		= <800>;
