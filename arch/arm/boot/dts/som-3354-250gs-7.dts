@@ -141,4 +141,10 @@
 		VDDIO-supply = <&reg_3p3v>;
 		clocks = <&si5351 2>;
 	};
+
+	eeprom@50 {
+		compatible = "st,24c32";
+		reg = <0x50>;
+		pagesize = <32>;
+	};
 };
