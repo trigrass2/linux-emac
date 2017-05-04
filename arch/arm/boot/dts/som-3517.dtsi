@@ -150,7 +150,7 @@
 
 	otg_drv_vbus: pinmux_otg_drv_vbus {
 		pinctrl-single,pins = <
-			OMAP3_CORE1_IOPAD(0x21d6, PIN_OUTPUT | MUX_MODE4)   /* mcspi2_clk.gpio_178 */
+			OMAP3_CORE1_IOPAD(0x21DA, PIN_OUTPUT | MUX_MODE4)
 		>;
 	};
 

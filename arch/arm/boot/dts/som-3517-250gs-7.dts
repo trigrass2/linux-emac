@@ -30,7 +30,7 @@
 
 		led@1 {
 			label = "green-led";
-			gpios = <&gpio6 20 GPIO_ACTIVE_HIGH>;
+			gpios = <&gpio6 18 GPIO_ACTIVE_HIGH>;
 			default-state = "on";
 		};
 
@@ -100,8 +100,8 @@
 &omap3_pmx_core {
 	leds_pins: pinmux_leds_pins {
 		pinctrl-single,pins = <
+			OMAP3_CORE1_IOPAD(0x21D6, PIN_OUTPUT | MUX_MODE4)   /* mcspi2_clk.gpio_178 */
 			OMAP3_CORE1_IOPAD(0x21D8, PIN_OUTPUT | MUX_MODE4)
-			OMAP3_CORE1_IOPAD(0x21DA, PIN_OUTPUT | MUX_MODE4)
 		>;
 	};
 };
