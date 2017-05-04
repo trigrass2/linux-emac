@@ -141,7 +141,6 @@
 	gpio6_pins: pinmux_gpio6_pins {
 		pinctrl-single,pins = <
 			OMAP3_CORE1_IOPAD(0x21c6, PIN_OUTPUT | MUX_MODE4)   /* hdq_sio.gpio_170 */
-			OMAP3_CORE1_IOPAD(0x21d6, PIN_OUTPUT | MUX_MODE4)   /* mcspi2_clk.gpio_178 */
 			OMAP3_CORE1_IOPAD(0x21c2, PIN_OUTPUT | MUX_MODE4)   /* i2c3_scl.gpio_184 */
 			OMAP3_CORE1_IOPAD(0x21c4, PIN_OUTPUT | MUX_MODE4)   /* i2c3_sda.gpio_185 */
 			OMAP3_CORE1_IOPAD(0x2184, PIN_OUTPUT | MUX_MODE4)   /* mcbsp4_clkx.gpio_152 */
