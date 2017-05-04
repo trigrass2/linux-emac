@@ -83,25 +83,15 @@
 
 	hsusb1_phy: hsusb1_phy {
 		compatible = "usb-nop-xceiv";
-		//reg = <0>;
-		//#phy-cells = <1>;
 		vcc-supply = <&reg_3p3v>;
 		reset-gpios = <&gpio2 25 GPIO_ACTIVE_LOW>;      /* gpio_57 */
        };
-
-	hsusb2_phy: hsusb2_phy {
-		compatible = "usb-nop-xceiv";
-		//reg = <1>;
-		#phy-cells = <0>;
-		vcc-supply = <&reg_3p3v>;
-		reset-gpios = <&gpio2 25 GPIO_ACTIVE_LOW>;      /* gpio_57 */
-	};
 
 	clocks {
 		#address-cells = <1>;
 		#size-cells = <0>;
 
-		cs4271_mclk: cs4271_mclk {
+		audio_mclk: audio_mclk {
 			compatible = "fixed-clock";
 			#clock-cells = <0>;
 			clock-frequency = <12288000>;
@@ -111,25 +101,11 @@
 
 	clock_gpio: clock_gpio {
 		compatible = "gpio-gate-clock";
-		clocks = <&cs4271_mclk>;
+		clocks = <&audio_mclk>;
 		#clock-cells = <0>;
 		enable-gpios = <&gpio5 28 GPIO_ACTIVE_HIGH>;
 	};
 
-	sound {
-		compatible = "emac,som3354-cs4271-snd";
-		ti,model = "SOM3517 CS4271";
-		ti,audio-codec = <&cs4271>;
-		ti,mcasp-controller = <&mcbsp2>;
-		ti,codec-clock-rate = <12288000>;
-		clocks = <&clock_gpio>;
-		clock-names = "mclk";
-		ti,audio-routing =
-			"Line Out",       "AOUTA+",
-			"Line Out",       "AOUTA-",
-			"Line Out",       "AOUTB+",
-			"Line Out",       "AOUTB-";
-	};
 };
 
 &omap3_pmx_core {
@@ -174,15 +150,25 @@
 
 	otg_drv_vbus: pinmux_otg_drv_vbus {
 		pinctrl-single,pins = <
-			OMAP3_CORE1_IOPAD(0x2210, PIN_INPUT_PULLDOWN | MUX_MODE0) /* rmii_50MHz_clk.usb0_drvvbus */
+			OMAP3_CORE1_IOPAD(0x21d6, PIN_OUTPUT | MUX_MODE4)   /* mcspi2_clk.gpio_178 */
 		>;
 	};
+
+	usb1_reset: pinmux_usb1_reset {
+		pinctrl-single,pins = <
+			OMAP3_CORE1_IOPAD(0x20ba, PIN_OUTPUT | MUX_MODE4)   /* gpmc_ncs6.gpio_57 */
+		>;
+	};
+};
+
+&can0 {
+	status = "okay";
 };
 
 &gpio6 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&gpio6_pins>;
-	status = "ok";
+	status = "okay";
 };
 
 &lcd0 {
@@ -190,7 +176,7 @@
 };
 
 &dss {
-	status = "ok";
+	status = "okay";
 	port {
 		dpi_out: endpoint {
 			remote-endpoint = <&lcd_in>;
@@ -212,6 +198,7 @@
 };
 
 &mcbsp2 {
+	#sound-dai-cells = <0>;
 	status = "okay";
 };
 
@@ -230,26 +217,37 @@
 	status = "okay";
 };
 
-&usb_otg_hs {
-	interface-type = <0>;
-	mode = <3>;
+&am35x_otg_hs {
+	compatible = "ti,am35x-musb";
+	reg = <0x5c040000 0x1000>;
+	interrupts = <71>;
+	interrupt-names = "mc";
+	clocks = <&hsotgusb_ick_am35xx &hsotgusb_fck_am35xx>;
+	clock-names = "ick", "fck";
+	multipoint = <1>;
+	num-eps = <16>;
+	ram-bits = <12>;
+	interface-type = <1>;
+	mode = <2>;
 	power = <50>;
-	status = "okay";
-	phys = <&hsusb2_phy>;
-	usb-phy = <&hsusb2_phy>;
-	phy-names = "usb2-phy";
+	status = "disabled"; /* currently not supported */
+	pinctrl-names = "default";
 	pinctrl-0 = <&otg_drv_vbus>;
 };
 
+&usb_otg_hs {
+	status = "disabled";
+};
 
 &usbhshost {
 	port1-mode = "ehci-phy";
-       //port2-mode = "ehci-phy";
-       //single-ulpi-bypass;
 };
 
 &usbhsehci {
-	phys = <&hsusb1_phy &hsusb2_phy>;
+	phys = <&hsusb1_phy>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&usb1_reset>;
+	status = "okay";
 };
 
 &i2c1 {
@@ -294,13 +292,6 @@
 		compatible = "emac,spidev";
 		spi-max-frequency = <48000000>;
 		reg = <3>;
-	};
-
-	cs4271: cs4271@2 {
-		compatible = "cirrus,cs4271";
-		spi-max-frequency = <1000000>;
-		reg = <2>;
-		status = "okay";
 	};
 };
 

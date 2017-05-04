@@ -14,5 +14,28 @@
 
 / {
 	model = "EMAC SOM-3517M SOM-212ES";
+
+	sound {
+		compatible = "emac,som3354-cs4271-snd";
+		ti,model = "SOM3517 CS4271";
+		ti,audio-codec = <&cs4271>;
+		ti,mcasp-controller = <&mcbsp2>;
+		ti,codec-clock-rate = <12288000>;
+		clocks = <&clock_gpio>;
+		clock-names = "mclk";
+		ti,audio-routing =
+			"Line Out",       "AOUTA+",
+			"Line Out",       "AOUTA-",
+			"Line Out",       "AOUTB+",
+			"Line Out",       "AOUTB-";
+	};
 };
 
+&mcspi1 {
+	cs4271: cs4271@2 {
+		compatible = "cirrus,cs4271";
+		spi-max-frequency = <1000000>;
+		reg = <2>;
+		status = "okay";
+	};
+};
