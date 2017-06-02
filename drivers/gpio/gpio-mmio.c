@@ -183,6 +183,10 @@ static int bgpio_get_set_multiple(struct gpio_chip *gc, unsigned long *mask,
 		*bits |= gc->read_reg(gc->reg_dat) & get_mask;
 
 	return 0;
+
+static int bgpio_get_cached(struct gpio_chip *gc, unsigned int gpio)
+{
+	return !!(gc->bgpio_data & gc->pin2mask(gc, gpio));
 }
 
 static int bgpio_get(struct gpio_chip *gc, unsigned int gpio)
@@ -525,7 +529,9 @@ static int bgpio_setup_io(struct gpio_chip *gc,
 		 * simply too much complexity, let the GPIO core fall back to
 		 * reading each line individually in that fringe case.
 		 */
-	} else {
+	} else if (!(flags & BGPIOF_NO_INPUT))
+		gc->get = bgpio_get_cached;
+	else
 		gc->get = bgpio_get;
 		if (gc->be_bits)
 			gc->get_multiple = bgpio_get_multiple_be;
@@ -559,7 +565,8 @@ static int bgpio_setup_direction(struct gpio_chip *gc,
 			gc->direction_output = bgpio_dir_out_err;
 		else
 			gc->direction_output = bgpio_simple_dir_out;
-		gc->direction_input = bgpio_simple_dir_in;
+		if (!(flags & BGPIOF_NO_INPUT))
+			gc->direction_input = bgpio_simple_dir_in;
 	}
 
 	return 0;
@@ -634,7 +641,11 @@ int bgpio_init(struct gpio_chip *gc, struct device *dev,
 	if (ret)
 		return ret;
 
-	gc->bgpio_data = gc->read_reg(gc->reg_dat);
+	if (!(flags & BGPIOF_NO_INPUT))
+		gc->bgpio_data = gc->read_reg(gc->reg_dat);
+	else
+		gc->write_reg(gc->reg_dat, 0);
+
 	if (gc->set == bgpio_set_set &&
 			!(flags & BGPIOF_UNREADABLE_REG_SET))
 		gc->bgpio_data = gc->read_reg(gc->reg_set);
@@ -695,6 +706,9 @@ static struct bgpio_pdata *bgpio_parse_dt(struct platform_device *pdev,
 
 	if (of_property_read_bool(pdev->dev.of_node, "no-output"))
 		*flags |= BGPIOF_NO_OUTPUT;
+
+	if (of_property_read_bool(pdev->dev.of_node, "no-input"))
+		*flags |= BGPIOF_NO_INPUT;
 
 	return pdata;
 }
