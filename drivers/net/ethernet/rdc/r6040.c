@@ -143,7 +143,7 @@
 #define MBCR_DEFAULT	0x012A	/* MAC Bus Control Register */
 #define MCAST_MAX	3	/* Max number multicast addresses to filter */
 
-#define MAC_DEF_TIMEOUT	2048	/* Default MAC read/write operation timeout */
+#define MAC_DEF_TIMEOUT	4096	/* Default MAC read/write operation timeout */
 
 /* Descriptor status */
 #define DSC_OWNER_MAC	0x8000	/* MAC is the owner of this descriptor */
