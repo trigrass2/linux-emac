@@ -32,23 +32,15 @@
 static DEFINE_SPINLOCK(sio_lock);
 
 #define DRV_NAME "vortex86_gpio"
-#ifdef CONFIG_VORTEX86DX2
+
 #define VORTEX86_NUM_GPIOS	40
 #define VORTEX86_NUM_IRQS	8
 
 #define GPIO_DAT_BASE 0x78
 #define GPIO_DIR_BASE 0x98
-#else
-#define VORTEX86_NUM_GPIOS	8
-#define VORTEX86_NUM_IRQS	1
-
-#define GPIO_DAT_BASE 0x102
-#define GPIO_DIR_BASE 0x94
-#endif
 
 #define GPIO_DAT_NAME "vortex86-gpio-dat"
 #define GPIO_DIR_NAME "vortex86-gpio-dir"
-
 
 #define GPIO_INT_IMR	0xdc
 #define GPIO_INT_ILR	0xdd

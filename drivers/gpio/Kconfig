@@ -1153,17 +1153,6 @@ config GPIO_VORTEX86
 	help
 	  Suport GPIO on Vortex86 series SoC
 
-if GPIO_VORTEX86
-choice
-	prompt "Vortex model"
-config VORTEX86DX2
-	bool "Vortex86 DX2"
-config VORTEX86EX
-	bool "Vortex86 EX"
-endchoice
-endif
-
-
 config GPIO_SODAVILLE
 	bool "Intel Sodaville GPIO support"
 	depends on X86 && OF
