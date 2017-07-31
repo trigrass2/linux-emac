@@ -398,6 +398,30 @@
 				0x0303002e /*C*/
 				>;
 	};
+	control@2,8 {
+		compatible = "emac,mmio-gpio";
+		reg-names = "dat";
+		reg = <2 8 1>;
+		gpio-controller;
+		#address-cells = <1>;
+		#size-cells = <1>;
+		bank-width = <1>;
+		fsl,weim-cs-timing = <0x00040081 0x00000000 0x04000000
+				      0x00000000 0x04000040 0x00000000>;
+
+	};
+	handy@2,10 {
+		compatible = "emac,mmio-gpio";
+		reg-names = "dat", "dirout";
+		reg = <2 10 1>, <2 11 1>;
+		gpio-controller;
+		#address-cells = <1>;
+		#size-cells = <1>;
+		bank-width = <1>;
+		fsl,weim-cs-timing = <0x00040081 0x00000000 0x04000000
+				      0x00000000 0x04000040 0x00000000>;
+
+	};
 };
 
 &iomuxc {
