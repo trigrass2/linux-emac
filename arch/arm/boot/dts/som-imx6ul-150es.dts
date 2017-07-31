@@ -51,6 +51,14 @@
 			regulator-max-microvolt = <2500000>;
 			regulator-always-on;
 		};
+		reg_usb_otg_vbus: regulator-usb-otg-vbus {
+			compatible = "regulator-fixed";
+			pinctrl-names = "default";
+			regulator-name = "usb_otg_vbus";
+			regulator-min-microvolt = <5000000>;
+			regulator-max-microvolt = <5000000>;
+			regulator-always-on;
+		};
 	};
 
 	clocks {
@@ -248,13 +256,19 @@
 };
 
 &usbotg1 {
-	dr_mode = "host";
-	disable-over-current;
+	vbus-supply = <&reg_usb_otg_vbus>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_usb_otg1_id>;
+	dr_mode = "otg";
+	srp-disable;
+	hnp-disable;
+	adp-disable;
 	status = "okay";
 };
 
 &usbotg2 {
-	dr_mode = "peripheral";
+	dr_mode = "host";
+	disable-over-current;
 	status = "okay";
 };
 
@@ -514,6 +528,12 @@
 	pinctrl_pwm2: pwm2grp {
 		fsl,pins = <
 			MX6UL_PAD_LCD_DATA01__PWM2_OUT		0x110b0
+		>;
+	};
+
+	pinctrl_usb_otg1_id: usbotg1idgrp {
+		fsl,pins = <
+			MX6UL_PAD_GPIO1_IO00__ANATOP_OTG1_ID	0x17059
 		>;
 	};
 
