@@ -208,6 +208,12 @@
 	status = "okay";
 };
 
+&pwm3 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_pwm3>;
+	status = "okay";
+};
+
 &qspi {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_qspi>;
@@ -528,6 +534,12 @@
 	pinctrl_pwm2: pwm2grp {
 		fsl,pins = <
 			MX6UL_PAD_LCD_DATA01__PWM2_OUT		0x110b0
+		>;
+	};
+
+	pinctrl_pwm3: pwm3grp {
+		fsl,pins = <
+			MX6UL_PAD_GPIO1_IO04__PWM3_OUT		0x1b0b1
 		>;
 	};
 
