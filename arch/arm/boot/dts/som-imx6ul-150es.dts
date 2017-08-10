@@ -27,7 +27,8 @@
 		compatible = "gpio-leds";
 		stat {
 			label = "status";
-			gpios = <&gpio4 16 GPIO_ACTIVE_HIGH>;
+			gpios = <&gpio4 16 GPIO_ACTIVE_LOW>;
+			default-state = "on";
 		};
 	};
 
