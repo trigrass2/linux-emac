@@ -710,13 +710,15 @@ static void omap_gpio_free(struct gpio_chip *chip, unsigned offset)
 {
 	struct gpio_bank *bank = gpiochip_get_data(chip);
 	unsigned long flags;
-
 	raw_spin_lock_irqsave(&bank->lock, flags);
-	bank->mod_usage &= ~(BIT(offset));
-	if (!LINE_USED(bank->irq_usage, offset)) {
+
+	if (!LINE_USED(bank->mod_usage, offset) && !LINE_USED(bank->irq_usage, offset)) {
 		omap_set_gpio_direction(bank, offset, 1);
 		omap_clear_gpio_debounce(bank, offset);
 	}
+
+	bank->mod_usage &= ~(BIT(offset));
+
 	omap_disable_gpio_module(bank, offset);
 	raw_spin_unlock_irqrestore(&bank->lock, flags);
 
