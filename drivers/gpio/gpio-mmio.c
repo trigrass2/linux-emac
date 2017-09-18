@@ -183,10 +183,11 @@ static int bgpio_get_set_multiple(struct gpio_chip *gc, unsigned long *mask,
 		*bits |= gc->read_reg(gc->reg_dat) & get_mask;
 
 	return 0;
+}
 
 static int bgpio_get_cached(struct gpio_chip *gc, unsigned int gpio)
 {
-	return !!(gc->bgpio_data & gc->pin2mask(gc, gpio));
+       return !!(gc->bgpio_data & bgpio_line2mask(gc, gpio));
 }
 
 static int bgpio_get(struct gpio_chip *gc, unsigned int gpio)
@@ -531,7 +532,8 @@ static int bgpio_setup_io(struct gpio_chip *gc,
 		 */
 	} else if (!(flags & BGPIOF_NO_INPUT))
 		gc->get = bgpio_get_cached;
-	else
+
+	else {
 		gc->get = bgpio_get;
 		if (gc->be_bits)
 			gc->get_multiple = bgpio_get_multiple_be;
@@ -563,10 +565,12 @@ static int bgpio_setup_direction(struct gpio_chip *gc,
 	} else {
 		if (flags & BGPIOF_NO_OUTPUT)
 			gc->direction_output = bgpio_dir_out_err;
-		else
+		else {
 			gc->direction_output = bgpio_simple_dir_out;
-		if (!(flags & BGPIOF_NO_INPUT))
-			gc->direction_input = bgpio_simple_dir_in;
+
+			if (!(flags & BGPIOF_NO_INPUT))
+				gc->direction_input = bgpio_simple_dir_in;
+		}
 	}
 
 	return 0;
