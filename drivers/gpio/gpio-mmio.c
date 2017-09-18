@@ -469,7 +469,7 @@ static int bgpio_setup_io(struct gpio_chip *gc,
 	if (!(flags & BGPIOF_UNREADABLE_REG_SET) &&
 	    (flags & BGPIOF_READ_OUTPUT_REG_SET))
 		gc->get = bgpio_get_set;
-	else if (!(flags & BGPIOF_NO_INPUT))
+	else if (flags & BGPIOF_NO_INPUT)
 		gc->get = bgpio_get_cached;
 	else
 		gc->get = bgpio_get;
