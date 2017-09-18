@@ -73,9 +73,9 @@
 		        reg = <2>;
 		        regulator-name = "wlan-en-regulator";
 		        regulator-min-microvolt = <1800000>;
-		        regulator-max-microvolt = <3300000>;
-		        gpio = <&gpio5 6 0>;
-		        regulator-always-on;
+		        regulator-max-microvolt = <1800000>;
+		        gpio = <&gpio5 5 0>;
+
 		        startup-delay-us = <70000>;
 		        enable-active-high;
 		};
@@ -175,7 +175,7 @@
 				MX6QDL_PAD_GPIO_0__CCM_CLKO1		0x130b0		/* GPIO_0_CLKO */
 				//MX6QDL_PAD_GPIO_2__GPIO1_IO02		0x80000000	/* uSDHC1 CD */
 				//MX6QDL_PAD_EIM_DA9__GPIO3_IO09		0x80000000	/* uSDHC3 CD */
-				MX6QDL_PAD_DISP0_DAT11__GPIO5_IO05      0x80000000      /* WIFI_ON (reset, active low) */
+				//MX6QDL_PAD_DISP0_DAT11__GPIO5_IO05      0x80000000      /* WIFI_ON (reset, active low) */
 				//MX6QDL_PAD_ENET_RXD1__GPIO1_IO26	0x000b0		/* WL_REG_ON (unused) */
 				//MX6QDL_PAD_ENET_TXD1__GPIO1_IO29	0x80000000	/* WL_HOST_WAKE, input */
 				//MX6QDL_PAD_CSI0_DAT13__GPIO5_IO31	0x0f0b0		/* GPIO5_IO31 (Wifi Power Enable) */
@@ -184,6 +184,12 @@
 				//MX6QDL_PAD_CSI0_DAT12__GPIO5_IO30	0x80000000	/* BT_WAKE */
 				//MX6QDL_PAD_CSI0_DATA_EN__GPIO5_IO20	0x80000000	/* BT_HOST_WAKE */
 				//MX6QDL_PAD_EIM_D29__GPIO3_IO29		0x80000000	/* RGMII_nRST */
+			>;
+		};
+		pinctrl_wifi: wifigrp {
+			fsl,pins = <
+				MX6QDL_PAD_NANDF_CS3__GPIO6_IO16   0x13059
+				MX6QDL_PAD_DISP0_DAT11__GPIO5_IO05 0x13059
 			>;
 		};
 	};
@@ -198,20 +204,22 @@
 
 &usdhc4 {
 	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_usdhc4>;
+	pinctrl-0 = <&pinctrl_usdhc4 &pinctrl_wifi>;
 	status = "okay";
 	vmmc-supply = <&wlan_en_reg>;
         cap-power-off-card;
         keep-power-in-suspend;
 	enable-sdio-wakeup;
+	no-1-8-v;
+	non-removable;
 
         #address-cells = <1>;
         #size-cells = <0>;
         wlcore: wlcore@0 {
                 compatible = "ti,wl1835";
                 reg = <0x2>;
-                interrupt-parent = <&gpio1>;
-                interrupts = <6 IRQ_TYPE_LEVEL_HIGH>;
+		interrupt-parent = <&gpio6>;
+		interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
 	};
 };
 
