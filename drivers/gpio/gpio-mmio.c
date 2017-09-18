@@ -530,7 +530,7 @@ static int bgpio_setup_io(struct gpio_chip *gc,
 		 * simply too much complexity, let the GPIO core fall back to
 		 * reading each line individually in that fringe case.
 		 */
-	} else if (!(flags & BGPIOF_NO_INPUT))
+	} else if (flags & BGPIOF_NO_INPUT)
 		gc->get = bgpio_get_cached;
 
 	else {
