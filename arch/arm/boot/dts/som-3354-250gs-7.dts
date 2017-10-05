@@ -36,7 +36,7 @@
 		};
 	};
 
-	backlight {
+	backlight: backlight {
 		compatible = "pwm-backlight";
 		pwms = <&ecap2 0 50000 0>;
 		enable-gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
@@ -64,8 +64,8 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&lcd_pins>;
 		status = "okay";
-
-		enable-gpios = <&gpio1 20 GPIO_ACTIVE_HIGH>;
+		backlight = <&backlight>;
+		enable-gpios = <&gpio0 20 GPIO_ACTIVE_HIGH>;
 
 		panel-info {
 			ac-bias		= <255>;
