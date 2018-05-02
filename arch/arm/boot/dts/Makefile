@@ -408,7 +408,8 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
 	imx6qp-nitrogen6_max.dtb \
 	imx6qp-sabreauto.dtb \
 	imx6qp-sabresd.dtb \
-	som-imx6q-350es.dtb
+	som-imx6q-350es.dtb \
+	som-imx6q-350es-10.dtb
 dtb-$(CONFIG_SOC_IMX6SL) += \
 	imx6sl-evk.dtb \
 	imx6sl-warp.dtb
