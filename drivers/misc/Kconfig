@@ -766,6 +766,13 @@ config PANEL_BOOT_MESSAGE
 	  An empty message will only clear the display at driver init time. Any other
 	  printf()-formatted message is valid with newline and escape codes.
 
+config EMAC_CPLD_ID
+	tristate "EMAC CPLD Version ID"
+	default "y"
+	---help---
+	  This prints out the CPLD version ID string stored in the CPLD. Also, creates
+	  the /sys/kernel/emac_cpld/cpld_version file.
+
 source "drivers/misc/c2port/Kconfig"
 source "drivers/misc/eeprom/Kconfig"
 source "drivers/misc/cb710/Kconfig"
