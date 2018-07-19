@@ -6,11 +6,7 @@
 #include <linux/platform_device.h>
 #include <linux/of.h>
 
-#define IOSTART  0x6000000f
-#define IOEXTEND 1
-
 static	u8 *mapped;
-static unsigned long iostart = IOSTART, ioextend = IOEXTEND;
 
 struct kobject *example_kobject;
 static int CPLD_VERSION;
@@ -69,7 +65,10 @@ err_release_mem:
 
 static int emac_pld_remove(struct platform_device *pdev)
 {
-	release_mem_region(iostart, ioextend);
+	struct resource *res;
+
+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	release_mem_region(res->start, resource_size(res));
 	kobject_put(example_kobject);
 	iounmap(mapped);
 
