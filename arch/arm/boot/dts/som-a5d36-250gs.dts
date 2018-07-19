@@ -1,0 +1,201 @@
+/*
+ * som-a5d36-250gs.dts - Device Tree file for the SoM-A5D36 / 250GS.
+ *
+ * Copyright (C) 2018 EMAC Inc.
+ *
+ * Licensed under GPLv2 or later.
+ */
+/dts-v1/;
+
+#include "som-a5d36.dtsi"
+
+/ {
+	model = "EMAC SOM-A5D36 with SOM-250GS";
+	
+	ahb {
+		apb {
+			spi0: spi@f0004000 {
+				cs-gpios = <&pioD 13 0>, <&pioD 15 0>, <0>, <&pioC 28 0>;
+				status = "okay";
+				m25p80@0 {
+					compatible = "atmel,n25q128a13";
+					spi-max-frequency = <50000000>;
+					reg = <0>;
+				};
+
+				spidev@1 {
+					compatible = "emac,spidev";
+					spi-max-frequency = <40000000>;
+					reg = <1>;
+					status = "okay";
+				};
+
+				spidev@3 {
+					compatible = "emac,spidev";
+					spi-max-frequency = <40000000>;
+					spi-cpol;
+					reg = <3>;
+					status = "okay";
+				};
+			};
+
+			i2c0: i2c@f0014000 {
+				status = "okay";
+
+				codec: sgtl5000@0a {
+					#sound-dai-cells = <0>;
+					compatible = "fsl,sgtl5000";
+					reg = <0x0a>;
+					VDDA-supply = <&reg_3p3v>;
+					VDDIO-supply = <&reg_3p3v>;
+					clocks = <&audio_mclk>;
+				};
+
+				eeprom@50 {
+					compatible = "st,24c32";
+					reg = <0x50>;
+					pagesize = <32>;
+				};
+			};
+
+
+
+			pinctrl@fffff200 {
+				mmc1 {
+					pinctrl_mmc1_cd: mmc1_cd {
+						atmel,pins =
+							<AT91_PIOC 5 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH>;
+					};
+				};
+
+				led {
+					pinctrl_led: led-board {
+						atmel,pins =
+							<AT91_PIOE 22 AT91_PERIPH_GPIO AT91_PINCTRL_NONE
+							AT91_PIOC 22 AT91_PERIPH_GPIO AT91_PINCTRL_NONE
+							AT91_PIOC 23 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
+					};
+				};
+
+				lcd {
+					pinctrl_lcd_alt: lcd_alt-0 {
+						atmel,pins =
+							<AT91_PIOA 0 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA0 periph A LCDD0 pin */
+							 AT91_PIOA 1 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA1 periph A LCDD1 pin */
+							 AT91_PIOA 2 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA2 periph A LCDD2 pin */
+							 AT91_PIOA 3 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA3 periph A LCDD3 pin */
+							 AT91_PIOA 4 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA4 periph A LCDD4 pin */
+							 AT91_PIOA 5 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA5 periph A LCDD5 pin */
+							 AT91_PIOA 6 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA6 periph A LCDD6 pin */
+							 AT91_PIOA 7 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA7 periph A LCDD7 pin */
+							 AT91_PIOA 8 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA8 periph A LCDD8 pin */
+							 AT91_PIOA 9 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA9 periph A LCDD9 pin */
+							 AT91_PIOA 10 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA10 periph A LCDD10 pin */
+							 AT91_PIOA 11 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA11 periph A LCDD11 pin */
+							 AT91_PIOA 12 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA12 periph A LCDD12 pin */
+							 AT91_PIOA 13 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA13 periph A LCDD13 pin */
+							 AT91_PIOA 14 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA14 periph A LCDD14 pin */
+							 AT91_PIOA 15 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA15 periph A LCDD15 pin */
+							 AT91_PIOA 16 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA16 periph A LCDD16 pin */
+							 AT91_PIOA 17 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA17 periph A LCDD17 pin */
+							 AT91_PIOA 18 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA18 periph A LCDD18 pin */
+							 AT91_PIOA 19 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA19 periph A LCDD19 pin */
+							 AT91_PIOA 20 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA20 periph A LCDD20 pin */
+							 AT91_PIOA 21 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA21 periph A LCDD21 pin */
+							 AT91_PIOA 22 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA22 periph A LCDD22 pin */
+							 AT91_PIOA 23 AT91_PERIPH_A AT91_PINCTRL_NONE>;	/* PA23 periph A LCDD23 pin */
+					};
+				};
+			};
+
+			mmc1: mmc@f8000000 {
+				pinctrl-names = "default";
+				pinctrl-0 = <&pinctrl_mmc1_clk_cmd_dat0 &pinctrl_mmc1_dat1_3 &pinctrl_mmc1_cd>;
+				status = "okay";
+				slot@0 {
+					reg = <0>;
+					bus-width = <4>;
+				};
+			};
+
+			pwm0: pwm@f002c000 {
+				pinctrl-names = "default";
+				pinctrl-0 = <&pinctrl_pwm0_pwmh3_1>;
+				status = "okay";
+			};
+		};
+
+
+	};
+
+	gpio-leds {
+		compatible = "gpio-leds";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_led>;
+
+		red-led {
+			label = "red-led";
+			gpios = <&pioC 22 GPIO_ACTIVE_HIGH>;
+			default-state = "on";
+		};
+		green-led {
+			label = "green-led";
+			gpios = <&pioC 23 GPIO_ACTIVE_HIGH>;
+			default-state = "on";
+		};
+	};
+
+	beeper {
+		compatible = "gpio-beeper";
+		gpios = <&pioC 24 GPIO_ACTIVE_HIGH>;
+		status = "okay";
+	};
+
+	sound {
+		compatible = "simple-audio-card";
+		simple-audio-card,format = "i2s";
+		simple-audio-card,name = "som-250gs sgtl5000";
+		simple-audio-card,widgets =
+			"Microphone", "Microphone Jack",
+			"Headphone", "Headphone Jack",
+			"Speaker", "Speaker Ext",
+			"Line", "Line In Jack";
+		simple-audio-card,routing =
+			"MIC_IN", "Microphone Jack",
+			"Microphone Jack", "Mic Bias",
+			"LINE_IN", "Line In Jack",
+			"Headphone Jack", "HP_OUT",
+			"Speaker Ext", "LINE_OUT";
+
+		simple-audio-card,cpu {
+			sound-dai = <&ssc0>;
+		};
+
+		sound_master: simple-audio-card,codec {
+			sound-dai = <&codec>;
+			clocks = <&audio_mclk>;
+			frame-master;
+			bitclock-master;
+		};
+	};
+
+	panel: panel {
+		compatible = "innolux,at070tn92", "simple-panel";
+		backlight = <&backlight>;
+		power-supply = <&lvds_3p3v>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+		status = "okay";
+
+		port@0 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			panel_input: endpoint@0 {
+				reg = <0>;
+				remote-endpoint = <&hlcdc_panel_output>;
+			};
+		};
+	};
+};
+
