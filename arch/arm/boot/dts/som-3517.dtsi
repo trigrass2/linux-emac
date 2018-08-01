@@ -293,6 +293,16 @@
 		vio-supply = <&reg_3p3v>;
 		interrupts-extended = <&gpio5 29 IRQ_TYPE_EDGE_FALLING>;
 		status = "okay";
+
+		touchscreen-fuzz-x = <4>;
+		touchscreen-fuzz-y = <7>;
+		touchscreen-fuzz-pressure = <2>;
+		touchscreen-size-x = <4096>;
+		touchscreen-size-y = <4096>;
+		touchscreen-max-pressure = <400>;
+
+		ti,x-plate-ohms = <850>;
+		ti,esd-recovery-timeout-ms = <800>;
 	};
 };
 
