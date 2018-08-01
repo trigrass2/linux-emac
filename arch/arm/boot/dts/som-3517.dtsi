@@ -38,9 +38,31 @@
 	};
 
 	backlight0: backlight {
-		compatible = "gpio-backlight";
-		gpios = <&gpio5 18 GPIO_ACTIVE_HIGH>;   /* gpio146 */
-		default-on;
+		compatible = "pwm-backlight";
+		pwms = <&pwm11 0 12000000 0>;
+		pwm-names = "backlight";
+		brightness-levels = <0 11 20 30 40 50 60 70 80 90 100>;
+		default-brightness-level = <9>;	/* => 90 */
+		pinctrl-names = "default";
+		pinctrl-0 = <&backlight_pins>;
+	};
+
+	pwm10: dmtimer-pwm10 {
+		compatible = "ti,omap-dmtimer-pwm";
+		ti,timers = <&timer10>;
+		#pwm-cells = <3>;
+	};
+
+	pwm9: dmtimer-pwm9 {
+		compatible = "ti,omap-dmtimer-pwm";
+		ti,timers = <&timer9>;
+		#pwm-cells = <3>;
+	};
+
+	pwm11: dmtimer-pwm {
+		compatible = "ti,omap-dmtimer-pwm";
+		ti,timers = <&timer11>;
+		#pwm-cells = <3>;
 	};
 
 	lcd0: display {
@@ -156,6 +178,14 @@
 	usb1_reset: pinmux_usb1_reset {
 		pinctrl-single,pins = <
 			OMAP3_CORE1_IOPAD(0x20ba, PIN_OUTPUT | MUX_MODE4)   /* gpmc_ncs6.gpio_57 */
+		>;
+	};
+
+	backlight_pins: pinmux_backlight_pins {
+		pinctrl-single,pins = <
+			OMAP3_CORE1_IOPAD(0x2174, PIN_OUTPUT | MUX_MODE2)  /* uart2_cts.gpt9_pwm_evt */
+			OMAP3_CORE1_IOPAD(0x2176, PIN_OUTPUT | MUX_MODE2)  /* uart2_rts.gpt10_pwm_evt */
+			OMAP3_CORE1_IOPAD(0x2178, PIN_OUTPUT | MUX_MODE2)  /* uart2_tx.gpt11_pwm_evt */
 		>;
 	};
 };
