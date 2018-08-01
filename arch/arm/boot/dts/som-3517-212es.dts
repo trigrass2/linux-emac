@@ -15,6 +15,12 @@
 / {
 	model = "EMAC SOM-3517M SOM-212ES";
 
+	beeper {
+		compatible = "gpio-beeper";
+		gpios = <&gpio6 21 GPIO_ACTIVE_HIGH>;
+		status = "okay";
+	};
+
 	sound {
 		compatible = "emac,som3354-cs4271-snd";
 		ti,model = "SOM3517 CS4271";
