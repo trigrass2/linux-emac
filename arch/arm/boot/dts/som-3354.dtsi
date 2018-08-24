@@ -243,14 +243,6 @@
 		>;
 	};
 
-	i2c2_pins: pinmux_i2c2_pins {
-		pinctrl-single,pins = <
-			AM33XX_IOPAD(0x978, PIN_INPUT_PULLUP | MUX_MODE3)       /* uart1_ctsn.i2c2_sda */
-			AM33XX_IOPAD(0x97c, PIN_INPUT_PULLUP | MUX_MODE3)       /* uart1_rtsn.i2c2_scl */
-		>;
-	};
-
-
 	vmmc_pins: vmmc_pins {
 		pinctrl-single,pins = <
 			AM33XX_IOPAD(0x9e4, PIN_OUTPUT | MUX_MODE7)		/* emu0.gpio3_7 */
@@ -309,8 +301,8 @@
 
 	uart1_pins: uart1_pins {
 		pinctrl-single,pins = <
-			//AM33XX_IOPAD(0x978, PIN_INPUT | MUX_MODE7)		/* uart1_ctsn.uart1_ctsn */
-			//AM33XX_IOPAD(0x97C, PIN_OUTPUT_PULLUP | MUX_MODE7)	/* uart1_rtsn.uart1_rtsn */
+			AM33XX_IOPAD(0x978, PIN_INPUT | MUX_MODE7)		/* uart1_ctsn.uart1_ctsn */
+			AM33XX_IOPAD(0x97C, PIN_OUTPUT_PULLUP | MUX_MODE7)	/* uart1_rtsn.uart1_rtsn */
 			AM33XX_IOPAD(0x980, PIN_INPUT_PULLUP | MUX_MODE0)	/* uart1_rxd.uart1_rxd */
 			AM33XX_IOPAD(0x984, PIN_OUTPUT_PULLDOWN | MUX_MODE0)	/* uart1_txd.uart1_txd */
 		>;
@@ -521,14 +513,6 @@
 			clock-frequency = <12288000>;
 	 	};
 	};
-};
-
-&i2c2 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&i2c2_pins>;
-
-	status = "okay";
-	clock-frequency = <100000>;
 };
 
 &mmc1 {
