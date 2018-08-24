@@ -17,6 +17,12 @@
 / {
 	model = "EMAC SOM-3354M SOM-250GS E7";
 
+	beeper {
+		compatible = "gpio-beeper";
+		gpios = <&gpio2 2 GPIO_ACTIVE_HIGH>;
+		status = "okay";
+	};
+
 	leds {
 		pinctrl-names = "default";
 		pinctrl-0 = <&leds_pins>;
