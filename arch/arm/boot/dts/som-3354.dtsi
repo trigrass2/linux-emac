@@ -404,18 +404,18 @@
 
 &spi0 {
 	ti,spi-num-cs = <6>;
-	dmas = <&edma 16
-		&edma 17
-		&edma 18
-		&edma 19
-		&edma 20
-		&edma 21
-		&edma 22
-		&edma 23
-		&edma 24
-		&edma 25
-		&edma 26
-		&edma 27>;
+	dmas = <&edma 16 0
+		&edma 17 0
+		&edma 18 0
+		&edma 19 0
+		&edma 20 0
+		&edma 21 0
+		&edma 22 0
+		&edma 23 0
+		&edma 24 0
+		&edma 25 0
+		&edma 32 0
+		&edma 33 0>;
 	dma-names = "tx0", "rx0", "tx1", "rx1", "tx2", "rx2", "tx3", "rx3", "tx4", "rx4", "tx5", "rx5";
 	pinctrl-names = "default";
 	pinctrl-0 = <&spi0_pins>;
