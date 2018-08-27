@@ -219,7 +219,7 @@
 		pinctrl-single,pins = <
 
 			AM33XX_IOPAD(0x950, PIN_INPUT_PULLUP | MUX_MODE0)	/* spi0_sclk.spi0_sclk */
-			AM33XX_IOPAD(0x95C, PIN_OUTPUT_PULLUP | MUX_MODE0)	/* spi0_cs0.spi0_cs0 */
+			AM33XX_IOPAD(0x95C, PIN_OUTPUT_PULLUP | MUX_MODE7)	/* spi0_cs0.spi0_cs0 */
 			AM33XX_IOPAD(0x954, PIN_INPUT_PULLUP | MUX_MODE0)	/* spi0_d0.spi0_d0 */
 			AM33XX_IOPAD(0x958, PIN_INPUT_PULLUP | MUX_MODE0)	/* spi0_d1.spi0_d1 */
 			AM33XX_IOPAD(0x960, PIN_OUTPUT_PULLUP | MUX_MODE0)	/* spi0_cs1.spi0_cs1 */
