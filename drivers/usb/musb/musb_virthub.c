@@ -275,7 +275,8 @@ static int musb_has_gadget(struct musb *musb)
 #ifdef CONFIG_USB_MUSB_HOST
 	return 1;
 #else
-	return musb->port_mode == MUSB_PORT_MODE_HOST;
+	return musb->port_mode == MUSB_PORT_MODE_HOST ||
+	       musb->port_mode == MUSB_PORT_MODE_DUAL_ROLE;
 #endif
 }
 
