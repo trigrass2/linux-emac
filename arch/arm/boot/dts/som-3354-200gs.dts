@@ -102,71 +102,86 @@
 		status = "okay";
 	};
 
-	porta: cpld@4,0 {
-		compatible = "emac,cpld-gpio";
-		reg = <0x4 0x0 0x2>;
+	portc: cpld@portc {
+		compatible = "emac,mmio-gpio";
+		reg-names = "dat";
+		reg = <0x4 0x4 0x1>;
 		bank-width = <1>;
 		gpio-controller;
-		#gpio-cells = <2>;
+		no-input;
+		#gpio-cells = <1>;
+		status = "okay";
+
 		gpmc,mux-add-data = <0>;
 		gpmc,device-width = <1>;
 		gpmc,wait-pin = <0>;
 		gpmc,cycle2cycle-samecsen = <1>;
 		gpmc,cycle2cycle-diffcsen = <1>;
-		gpmc,cs-on-ns = <18>;
-		gpmc,cs-rd-off-ns = <295>;
-		gpmc,cs-wr-off-ns = <295>;
-		gpmc,adv-on-ns = <73>;
-		gpmc,adv-rd-off-ns = <92>;
+		gpmc,cs-on-ns = <20>;
+		gpmc,cs-rd-off-ns = <300>;
+		gpmc,cs-wr-off-ns = <300>;
+		gpmc,adv-on-ns = <80>;
+		gpmc,adv-rd-off-ns = <100>;
 		gpmc,adv-wr-off-ns = <110>;
 		gpmc,oe-on-ns = <110>;
-		gpmc,oe-off-ns = <295>;
-		gpmc,we-on-ns = <92>;
-		gpmc,we-off-ns = <295>;
+		gpmc,oe-off-ns = <300>;
+		gpmc,we-on-ns = <100>;
+		gpmc,we-off-ns = <300>;
 		gpmc,rd-cycle-ns = <300>;
 		gpmc,wr-cycle-ns = <300>;
-		gpmc,access-ns = <276>;
-		gpmc,page-burst-access-ns = <18>;
+		gpmc,access-ns = <280>;
+		gpmc,page-burst-access-ns = <20>;
 		gpmc,bus-turnaround-ns = <20>;
 		gpmc,cycle2cycle-delay-ns = <20>;
-		gpmc,wr-access-ns = <276>;
-		status = "okay";
+		gpmc,wr-access-ns = <280>;
 	};
 
-	portb: cpld@4,2 {
-		compatible = "emac,cpld-gpio";
-		reg = <0x4 0x2 0x2>;
+	portb: cpld@portb {
+		compatible = "emac,mmio-gpio";
+		reg-names = "dat", "dirout";
+		reg = <0x4 0x2 0x1>;
 		bank-width = <1>;
 		gpio-controller;
-		#gpio-cells = <2>;
+		#gpio-cells = <1>;
 		status = "okay";
 	};
 
-	portc: cpld@4,4 {
-		compatible = "emac,cpld-gpo";
-		reg = <0x4 0x4 0x1>;
+	porta: cpld@porta {
+		compatible = "emac,mmio-gpio";
+		reg-names = "dat", "dirout";
+		reg = <0x4 0x0 0x1>;
 		bank-width = <1>;
 		gpio-controller;
-		#gpio-cells = <2>;
+		#gpio-cells = <1>;
 		status = "okay";
 	};
 
-	control: cpld@4,6 {
-		compatible = "emac,cpld-gpo";
+	control: cpld@comshtdn {
+		compatible = "emac,mmio-gpio";
+		reg-names = "dat";
 		reg = <0x4 0x6 0x1>;
 		bank-width = <1>;
 		gpio-controller;
-		#gpio-cells = <2>;
+		no-input;
+		#gpio-cells = <1>;
 		status = "okay";
 	};
 
-	gpio: cpld@4,8 {
-		compatible = "emac,cpld-gpio";
-		reg = <0x4 0x8 0x2>;
+	gpio: cpld@handy {
+		compatible = "emac,mmio-gpio";
+		reg-names = "dat", "dirout";
+		reg = <0x4 0x8 0x1>;
 		bank-width = <1>;
 		gpio-controller;
-		#gpio-cells = <2>;
+		#gpio-cells = <1>;
 		status = "okay";
+	};
+
+	id: cpld@id {
+		compatible = "emac,emac-cpld-id";
+		reg = <0x4 0x7 0x1>;
+		#address-cells = <1>;
+		#size-cells = <1>;
 	};
 };
 
