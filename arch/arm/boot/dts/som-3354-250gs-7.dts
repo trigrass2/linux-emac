@@ -15,7 +15,7 @@
 #include "som-3354.dtsi"
 
 / {
-	model = "EMAC SOM-3354M SOM-250GS E7";
+	model = "EMAC SOM-3354M SOM-250GS-7";
 
 	beeper {
 		compatible = "gpio-beeper";

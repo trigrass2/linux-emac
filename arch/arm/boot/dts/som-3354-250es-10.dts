@@ -15,7 +15,7 @@
 #include "som-3354.dtsi"
 
 / {
-	model = "EMAC SOM-3354M SOM-250ES E10";
+	model = "EMAC SOM-3354M SOM-250ES-10";
 
 	leds {
 		pinctrl-names = "default";
