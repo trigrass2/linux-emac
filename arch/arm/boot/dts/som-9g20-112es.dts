@@ -191,19 +191,19 @@
 				pinctrl-0 = <&pinctrl_spi0 &pinctrl_spi0_cs>;
 				status = "okay";
 
-				spidev00: spidev@0 {
+				spidev0: spidev@0 {
 					compatible = "emac,spidev";
 					reg = <0>;
 					spi-max-frequency = <40000000>;
 				};
 
-				spidev01: spidev@1 {
+				spidev1: spidev@1 {
 					compatible = "emac,spidev";
 					reg = <1>;
 					spi-max-frequency = <40000000>;
 				};
 
-				spidev02: spidev@2 {
+				spidev2: spidev@2 {
 					compatible = "emac,spidev";
 					reg = <2>;
 					spi-max-frequency = <40000000>;
@@ -223,7 +223,7 @@
 				pinctrl-0 = <&pinctrl_spi1 &pinctrl_spi1_cs>;
 				status = "okay";
 
-				spidev10: spidev@0 {
+				spidev10: spidev@10 {
 					compatible = "emac,spidev";
 					reg = <0>;
 					spi-max-frequency = <40000000>;
@@ -251,6 +251,7 @@
 				compatible = "linux,wdt-gpio";
 				gpios = <&pioB 20 GPIO_ACTIVE_LOW>;
 				hw_algo = "toggle";
+				always-running;
 				hw_margin_ms = <1000>;
 			};
 		};
