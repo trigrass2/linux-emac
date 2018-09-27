@@ -47,7 +47,9 @@ dtb-$(CONFIG_SOC_AT91SAM9) += \
 	som-9g20-150es.dtb \
 	som-9g20-112es.dtb \
 	som-9g25-150es.dtb \
-	som-9g25-112es.dtb
+	som-9g25-112es.dtb \
+	som-9x25-150es.dtb \
+	som-9x25-112es.dtb
 dtb-$(CONFIG_SOC_SAM_V7) += \
 	at91-kizbox2.dtb \
 	at91-sama5d2_xplained.dtb \
