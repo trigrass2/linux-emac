@@ -16,3 +16,29 @@
 	model = "EMAC SOM-3517M SOM-210ES";
 };
 
+&mcspi1 {
+	spidev@0 {
+		compatible = "emac,spidev";
+		spi-max-frequency = <48000000>;
+		reg = <0>;
+	};
+
+	spidev@1 {
+		compatible = "emac,spidev";
+		spi-max-frequency = <48000000>;
+		reg = <1>;
+	};
+
+	spidev@2 {
+		compatible = "emac,spidev";
+		spi-max-frequency = <48000000>;
+		reg = <2>;
+	};
+
+	spidev@3 {
+		compatible = "emac,spidev";
+		spi-max-frequency = <48000000>;
+		reg = <3>;
+	};
+};
+

@@ -135,3 +135,17 @@
 	};
 
 };
+
+&mcspi1 {
+	spidev@1 {
+		compatible = "emac,spidev";
+		spi-max-frequency = <48000000>;
+		reg = <1>;
+	};
+
+	spidev@3 {
+		compatible = "emac,spidev";
+		spi-max-frequency = <48000000>;
+		reg = <3>;
+	};
+};

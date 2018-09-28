@@ -303,25 +303,6 @@
 	status="disabled";
 };
 
-&mcspi1 {
-	spidev@0 {
-		compatible = "emac,spidev";
-		spi-max-frequency = <48000000>;
-		reg = <0>;
-	};
-
-	spidev@1 {
-		compatible = "emac,spidev";
-		spi-max-frequency = <48000000>;
-		reg = <1>;
-	};
-	spidev@3 {
-		compatible = "emac,spidev";
-		spi-max-frequency = <48000000>;
-		reg = <3>;
-	};
-};
-
 &mmc1 {
 	vmmc-supply = <&vmmc_fixed>;
 	bus-width = <4>;
