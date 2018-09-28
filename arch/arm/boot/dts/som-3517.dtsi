@@ -148,6 +148,9 @@
 			OMAP3_CORE1_IOPAD(0x216e, PIN_OUTPUT_PULLUP | MUX_MODE4)    /* mcbsp3_dr.uart2_rts */
 			OMAP3_CORE1_IOPAD(0x2170, PIN_OUTPUT_PULLUP | MUX_MODE1)    /* mcbsp3_clk.uart2_tx */
 			OMAP3_CORE1_IOPAD(0x2172, PIN_INPUT_PULLUP | MUX_MODE1)	    /* mcbsp3_fsx.uart2_rx */
+			OMAP3_CORE1_IOPAD(0x21c6, PIN_OUTPUT | MUX_MODE4)   /* hdq_sio.gpio_170 */
+			OMAP3_CORE1_IOPAD(0x21c2, PIN_OUTPUT | MUX_MODE4)   /* i2c3_scl.gpio_184 */
+			OMAP3_CORE1_IOPAD(0x21c4, PIN_OUTPUT | MUX_MODE4)   /* i2c3_sda.gpio_185 */
 		>;
 	};
 
@@ -157,15 +160,6 @@
 			OMAP3_CORE1_IOPAD(0x20D0, PIN_INPUT_PULLUP | MUX_MODE1)   /* gmpc_wait2.uart4_rx */
 			OMAP3_CORE1_IOPAD(0x21E8, PIN_OUTPUT_PULLUP | MUX_MODE2)  /* ccdc_hd_simo.uart4_rts */
 			OMAP3_CORE1_IOPAD(0x21EA, PIN_INPUT_PULLUP | MUX_MODE2)   /* ccdc_vd.uart4_cts */
-		>;
-	};
-
-	gpio6_pins: pinmux_gpio6_pins {
-		pinctrl-single,pins = <
-			OMAP3_CORE1_IOPAD(0x21c6, PIN_OUTPUT | MUX_MODE4)   /* hdq_sio.gpio_170 */
-			OMAP3_CORE1_IOPAD(0x21c2, PIN_OUTPUT | MUX_MODE4)   /* i2c3_scl.gpio_184 */
-			OMAP3_CORE1_IOPAD(0x21c4, PIN_OUTPUT | MUX_MODE4)   /* i2c3_sda.gpio_185 */
-			OMAP3_CORE1_IOPAD(0x2184, PIN_OUTPUT | MUX_MODE4)   /* mcbsp4_clkx.gpio_152 */
 		>;
 	};
 
@@ -191,12 +185,6 @@
 };
 
 &can0 {
-	status = "okay";
-};
-
-&gpio6 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&gpio6_pins>;
 	status = "okay";
 };
 
