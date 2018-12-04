@@ -366,7 +366,7 @@
 	status = "okay";
 
 	flash: n25q128@0 {
-		compatible = "m25p128-nonjedec";
+		compatible = "n25q128a13";
 		reg = <0>;
 		spi-max-frequency = <20000000>;
 	};
