@@ -16,3 +16,19 @@
 / {
 	model = "EMAC SOM-3354M SOM-210ES";
 };
+
+&spi0 {
+	spidev2: spidev@2 {
+		compatible = "emac,spidev";
+		reg = <2>;
+		spi-max-frequency = <40000000>;
+		status = "okay";
+	};
+
+	spidev3: spidev@3 {
+		compatible = "emac,spidev";
+		reg = <3>;
+		spi-max-frequency = <40000000>;
+		status = "okay";
+	};
+};
