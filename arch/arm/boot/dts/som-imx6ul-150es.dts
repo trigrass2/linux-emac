@@ -234,13 +234,14 @@
 &uart1 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_uart1>;
+	fsl,uart-has-rtscts;
 	status = "okay";
 };
 
 &uart2 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_uart2>;
-	uart-has-rtscts;
+	fsl,uart-has-rtscts;
 	status = "okay";
 };
 
@@ -422,6 +423,15 @@
 		fsl,weim-cs-timing = <0x00040081 0x00000000 0x04000000
 				      0x00000000 0x04000040 0x00000000>;
 
+	};
+
+	id@2,0xf {
+		compatible = "emac,emac-cpld-id";
+		reg = <2 0xf 1>;
+		#address-cells = <1>;
+		#size-cells = <1>;
+		fsl,weim-cs-timing = <0x00040081 0x00000000 0x04000000
+				      0x00000000 0x04000040 0x00000000>;
 	};
 };
 
