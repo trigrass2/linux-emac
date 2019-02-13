@@ -243,7 +243,7 @@
 		>;
 	};
 
-	vmmc_pins: vmmc_pins {
+	vmmc_pins: pinmux_vmmc_pins {
 		pinctrl-single,pins = <
 			AM33XX_IOPAD(0x9e4, PIN_OUTPUT | MUX_MODE7)		/* emu0.gpio3_7 */
 		>;
@@ -323,7 +323,7 @@
 	usbdrv0_pins: usbdrv0_pins {
 		pinctrl-single,pins = <
 			AM33XX_IOPAD(0x968, PIN_OUTPUT | MUX_MODE7) /* uart0_ctsn.gpio1_8 */
-			AM33XX_IOPAD(0x21c, PIN_OUTPUT | MUX_MODE7)      /* usb0_drvvbus.gpio0_18 */
+			AM33XX_IOPAD(0xa1c, PIN_OUTPUT | MUX_MODE7)      /* usb0_drvvbus.gpio0_18 */
 		>;
 	};
 
@@ -494,6 +494,7 @@
 	status = "okay";
 	vmmc-supply = <&vmain>;
 	bus-width = <4>;
+	ti,non-removable;
 };
 
 &mmc2 {
