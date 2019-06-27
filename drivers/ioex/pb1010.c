@@ -9,14 +9,16 @@
  ***************************************************************************/
  
 #include <linux/kernel.h>
-#include <linux/autoconf.h>
 #include <linux/ioport.h>
 #include <linux/device.h>
 #include <linux/ioex/pb1010.h>
 #include <linux/platform_device.h>
 #include <linux/class/gpio.h>
 #include <linux/class/pwm.h>
+#include <linux/module.h>
 #include <asm/io.h>
+#include <linux/of.h>
+#include <linux/of_device.h>
 
 #define DRV_MODULE_NAME 	"pb1010"
 #define DRV_MODULE_VERSION 	"1.0"
@@ -25,7 +27,7 @@ static int  gpio_data_write16(gpio_t *gpio, gpio_data data){iowrite16(data,gpio-
 static gpio_data gpio_data_read16(gpio_t *gpio){return ioread16(gpio->data+gpio->index);}
 
 
-static inline struct class_device *gpio16_indexed_create(void *base,unsigned long size, const char *name){
+static inline struct device *gpio16_indexed_create(void *base,unsigned long size, const char *name){
 	gpio_t *gpio = kmalloc(sizeof(gpio_t),GFP_KERNEL);
 	memset(gpio,0,sizeof(gpio_t));
 	gpio->name = name;
@@ -38,10 +40,10 @@ static inline struct class_device *gpio16_indexed_create(void *base,unsigned lon
 	gpio->index_write = gpio_index_write;
     gpio->index_read = gpio_index_read;
     printk("registering indexed gpio device: %s\n",name);
-    return gpio_register_class_device(gpio);
+    return gpio_register_device(gpio);
 }
 
-static inline struct class_device *gpio_indexed_create(void *base,unsigned long size, const char *name){
+static inline struct device *gpio_indexed_create(void *base,unsigned long size, const char *name){
 	gpio_t *gpio = kmalloc(sizeof(gpio_t),GFP_KERNEL);
 	memset(gpio,0,sizeof(gpio_t));
 	gpio->name = name;
@@ -54,7 +56,7 @@ static inline struct class_device *gpio_indexed_create(void *base,unsigned long 
 	gpio->index_write = gpio_index_write;
     gpio->index_read = gpio_index_read;
     printk("registering indexed gpio device: %s\n",name);
-    return gpio_register_class_device(gpio);
+    return gpio_register_device(gpio);
 }
 
 /**
@@ -86,7 +88,7 @@ return 0;
 static inline void map_core(unsigned long phys_addr, unsigned long size, int key_offset,const char *name,int flags)
 {	
 	u8 *virt_addr = ioremap_nocache(phys_addr,size);
-	int version;
+	//int version;
 	
 	if(virt_addr==NULL)printk("could not remap physical memory at %lx for pb1010 core\n",phys_addr);
 	else{
@@ -115,11 +117,23 @@ static int pb1010_probe(struct platform_device *pdev){
 	return 0;
 }
 
+#if defined(CONFIG_OF)
+static const struct of_device_id pb1010_dt_ids[] = {
+	{ .compatible = "pb1010" },
+	{ /* sentinel */ }
+};
+
+MODULE_DEVICE_TABLE(of, ecoreex_dt_ids);
+#endif
+
 //driver currently has no removal method.
 static struct platform_driver pb1010_driver = {
 	.probe		= pb1010_probe,
 	.driver		= {
 		.name	= "pb1010",
+#if defined(CONFIG_OF)
+		.of_match_table = of_match_ptr(pb1010_dt_ids),
+#endif
 	},
 };
 

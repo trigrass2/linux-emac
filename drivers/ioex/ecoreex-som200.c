@@ -156,7 +156,7 @@ void map_core(unsigned long phys_addr, unsigned long size,
 	else {
 		if (VERSION_KEY == -1)
 			version = ioread8(&data->virt_addr[data->key_offset]);
-		printk("EMAC core version %x detected att %lx\n", version,
+		printk("EMAC core version %x detected at %lx\n", version,
 				phys_addr + data->key_offset);
 		switch (version) {
 			case CPLD_SOM200:

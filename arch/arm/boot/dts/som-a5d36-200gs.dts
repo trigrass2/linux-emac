@@ -140,6 +140,26 @@
 				atmel,smc-nwe-cycle-ns = <64>;
 				atmel,smc-tdf-ns = <16>;
 			};
+
+			fpga: pb1010@0 {
+				compatible = "pb1010";
+				reg = <0 0 0x10>;
+
+				atmel,smc-read-mode = "nrd";
+				atmel,smc-write-mode = "nwe";
+				atmel,smc-bus-width = <8>;
+				atmel,smc-ncs-rd-setup-ns = <8>;
+				atmel,smc-ncs-wr-setup-ns = <8>;
+				atmel,smc-nwe-setup-ns = <16>;
+				atmel,smc-nrd-setup-ns = <16>;
+				atmel,smc-ncs-rd-pulse-ns = <40>;
+				atmel,smc-ncs-wr-pulse-ns = <40>;
+				atmel,smc-nrd-pulse-ns = <24>;
+				atmel,smc-nwe-pulse-ns = <24>;
+				atmel,smc-nrd-cycle-ns = <64>;
+				atmel,smc-nwe-cycle-ns = <64>;
+				atmel,smc-tdf-ns = <16>;
+			};
 		};
 	};
 
