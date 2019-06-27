@@ -1,0 +1,67 @@
+#
+# IO expansion configuration
+#
+
+menu "IO expansion"
+
+config ECOREEX
+        tristate "EMAC cores"
+        ---help---
+        Provides autodetection and support for PLD cores following the EMAC
+        format, which uses a device key to communicate the expansion devices available to
+        the kernel.
+
+choice
+	depends on ECOREEX
+	prompt "Select carrier"
+	config ECOREEX_EVC
+		bool "EVC Carrier Expansion I/O"
+		---help---
+		Provides support for the EVC carrier
+
+	config ECOREEX_HWMS
+		bool "HWMS Carrier Expansion I/O"
+		---help---
+		Provides support for the HWMS carrier
+
+	config ECOREEX_SDAC
+		bool "Polar66 SDAC expansion I/O"
+		---help---
+		Provides support for the SDAC carrier
+
+	config ECOREEX_SOM150
+		bool "EMAC SoM-150-ES expansion I/O"
+		---help---
+		Provides support for the EMAC SoM-150-ES PLD
+
+	config ECOREEX_SOM200
+		bool "EMAC SoM-200-ES expansion I/O"
+		---help---
+		Provides support for the EMAC SoM-200-ES PLD
+endchoice
+
+config ECOREEX_KEY
+        depends on ECOREEX
+        bool "Define static version key"
+        ---help---
+        Disable auto-detection of the PLD core by defining the version key
+
+config ECOREEX_STATIC_KEY
+        depends on ECOREEX_KEY
+        hex "Version key"
+        default "0xC0"
+        ---help---
+        Set the static version key for the PLD core
+
+config BOARDSPEC
+        tristate "board devices"
+        ---help---
+        Provides registration of devices provided by the machine.
+
+config ICB_G2L_PLD
+	tristate "ICB G2L PLD"
+	---help---
+	Provides a GPIO driver mapping the PLD on the ICB G2L carrier board.
+
+endmenu
+
