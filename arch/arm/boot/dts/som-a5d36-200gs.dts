@@ -120,16 +120,10 @@
 			pinctrl-names = "default";
 			pinctrl-0 = <&pinctrl_smc &pinctrl_pck0>;
 
-			portc@2,4 {
-				compatible = "emac,mmio-gpio";
-				reg-names = "dat";
-				reg = <2 4 1>;
-				gpio-controller;
-				no-input;
-				#address-cells = <1>;
-				#size-cells = <1>;
-				#gpio-cells = <1>;
-				bank-width = <1>;
+			cpld: ecoreex@2 {
+				compatible = "ecoreex";
+				reg = <2 0 0x10>;
+				key_offset = <0x7>;
 
 				atmel,smc-read-mode = "nrd";
 				atmel,smc-write-mode = "nwe";
@@ -145,58 +139,6 @@
 				atmel,smc-nrd-cycle-ns = <64>;
 				atmel,smc-nwe-cycle-ns = <64>;
 				atmel,smc-tdf-ns = <16>;
-			};
-
-			portb@2,2 {
-				compatible = "emac,mmio-gpio";
-				reg-names = "dat", "dirout";
-				reg = <2 2 1>, <2 3 1>;
-				gpio-controller;
-				#address-cells = <1>;
-				#size-cells = <1>;
-				#gpio-cells = <1>;
-				bank-width = <1>;
-			};
-
-			porta@2,0 {
-				compatible = "emac,mmio-gpio";
-				reg-names = "dat", "dirout";
-				reg = <2 0 1>, <2 1 1>;
-				gpio-controller;
-				#address-cells = <1>;
-				#size-cells = <1>;
-				#gpio-cells = <1>;
-				bank-width = <1>;
-			};
-
-			comshdn@2,6 {
-				compatible = "emac,mmio-gpio";
-				reg-names = "dat";
-				reg = <2 6 1>;
-				gpio-controller;
-				no-input;
-				#address-cells = <1>;
-				#size-cells = <1>;
-				#gpio-cells = <1>;
-				bank-width = <1>;
-			};
-
-			handy@2,8 {
-				compatible = "emac,mmio-gpio";
-				reg-names = "dat", "dirout";
-				reg = <2 8 1>, <2 9 1>;
-				gpio-controller;
-				#address-cells = <1>;
-				#size-cells = <1>;
-				#gpio-cells = <1>;
-				bank-width = <1>;
-			};
-
-			id@2,7 {
-				compatible = "emac,emac-cpld-id";
-				reg = <2 7 1>;
-				#address-cells = <1>;
-				#size-cells = <1>;
 			};
 		};
 	};
