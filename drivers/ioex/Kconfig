@@ -58,6 +58,11 @@ config BOARDSPEC
         ---help---
         Provides registration of devices provided by the machine.
 
+config PB1010
+        tristate "Shufflemaster PB1010 FPGA module"
+        ---help---
+        Provides support for the Shufflemaster FPGA module.
+
 config ICB_G2L_PLD
 	tristate "ICB G2L PLD"
 	---help---
