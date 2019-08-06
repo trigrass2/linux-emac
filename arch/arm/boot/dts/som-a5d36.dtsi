@@ -1,0 +1,284 @@
+/*
+ * som-a5d36.dtsi - Device Tree inclue file for the SOM-3354M with SOM-2xx carriers.
+ *
+ * Copyright (C) 2018 EMAC Inc.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+#include "sama5d36.dtsi"
+
+
+/ {
+	compatible = "emac,soma5d36", "atmel,sama5d3", "atmel,sama5";
+
+	aliases {
+		spi0 = &spi0;
+	};
+
+	memory {
+		reg = <0x20000000 0x20000000>;
+	};
+
+	clocks {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges;
+
+		slow_xtal {
+			clock-frequency = <32768>;
+		};
+
+		main_xtal {
+			clock-frequency = <12000000>;
+		};
+
+		main_clock: clock@0 {
+			compatible = "atmel,osc", "fixed-clock";
+			clock-frequency = <12000000>;
+		};
+
+		audio_mclk: audio_mclk {
+			compatible = "fixed-clock";
+			#clock-cells = <0>;
+			clock-frequency = <12288000>;
+			clock-output-names = "mclk";
+		};
+	};
+
+	regulators {
+		compatible = "simple-bus";
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		vref: regulator@0 {
+			compatible = "regulator-fixed";
+			reg = <0>;
+			regulator-name = "vref";
+			regulator-min-microvolt = <2500000>;
+			regulator-max-microvolt = <2500000>;
+			regulator-always-on;
+			gpio = <&pioB 25 GPIO_ACTIVE_HIGH>;
+		};
+
+		reg_3p3v: regulator@1 {
+			compatible = "regulator-fixed";
+			reg = <1>;
+			regulator-name = "reg_3p3v";
+			regulator-min-microvolt = <3300000>;
+			regulator-max-microvolt = <3300000>;
+			regulator-always-on;
+		};
+
+		bl_reg: backlight-regulator {
+			compatible = "regulator-fixed";
+			reg = <2>;
+			regulator-name = "backlight-power-supply";
+			regulator-min-microvolt = <5000000>;
+			regulator-max-microvolt = <5000000>;
+			regulator-boot-on;
+			regulator-always-on;
+		};
+
+		lvds_3p3v: lvds_3p3v_reg {
+			compatible = "regulator-fixed";
+			reg = <3>;
+			regulator-name = "LVDS 3P3V";
+			regulator-min-microvolt = <3300000>;
+			regulator-max-microvolt = <3300000>;
+			regulator-boot-on;
+			enable-active-high;
+			gpio = <&pioC 25 GPIO_ACTIVE_LOW>;
+		};
+	};
+
+	ahb {
+		apb {
+			pinctrl@fffff200 {
+				pck0 {
+					pinctrl_pck0: pck0_as_clk_mck {
+						atmel,pins =
+							<AT91_PIOD 30 AT91_PERIPH_B AT91_PINCTRL_NONE>;
+					};
+				};
+
+				usba {
+					pinctrl_usba_vbus: usba_vbus {
+						atmel,pins =
+							<AT91_PIOC 27 AT91_PERIPH_GPIO AT91_PINCTRL_DEGLITCH>;
+					};
+				};
+
+				board {
+					pinctrl_som: som-board {
+						atmel,pins =
+							<AT91_PIOD  7 AT91_PERIPH_GPIO AT91_PINCTRL_NONE
+							 AT91_PIOB 25 AT91_PERIPH_GPIO AT91_PINCTRL_NONE
+							 AT91_PIOD  5 AT91_PERIPH_GPIO AT91_PINCTRL_NONE
+							 AT91_PIOC  6 AT91_PERIPH_GPIO AT91_PINCTRL_NONE
+							 AT91_PIOC  7 AT91_PERIPH_GPIO AT91_PINCTRL_NONE
+							 AT91_PIOC  8 AT91_PERIPH_GPIO AT91_PINCTRL_NONE
+							 AT91_PIOC  9 AT91_PERIPH_GPIO AT91_PINCTRL_NONE
+							 AT91_PIOC 10 AT91_PERIPH_GPIO AT91_PINCTRL_NONE
+							 AT91_PIOC 11 AT91_PERIPH_GPIO AT91_PINCTRL_NONE
+							 AT91_PIOC 22 AT91_PERIPH_GPIO AT91_PINCTRL_NONE
+							 AT91_PIOC 23 AT91_PERIPH_GPIO AT91_PINCTRL_NONE
+							 AT91_PIOC 24 AT91_PERIPH_GPIO AT91_PINCTRL_NONE
+							 AT91_PIOC 25 AT91_PERIPH_GPIO AT91_PINCTRL_NONE
+							 AT91_PIOC 19 AT91_PERIPH_GPIO AT91_PINCTRL_NONE
+							 AT91_PIOC 15 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
+					};
+				};
+
+				ssc0 {
+					pinctrl_ssc0_txrx: ssc0_txrx {
+						atmel,pins =
+							<AT91_PIOC 16 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PC16 periph A TK0 */
+							 AT91_PIOC 17 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PC17 periph A TF0 */
+							 AT91_PIOC 18 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PC18 periph A TD0 */
+							 AT91_PIOC 20 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PC20 periph A RF0 */
+							 AT91_PIOC 21 AT91_PERIPH_A AT91_PINCTRL_NONE>;	/* PC21 periph A RD0 */
+					};
+				};
+			};
+
+			can1: can@f8010000 {
+				status = "okay";
+			};
+
+			hlcdc: hlcdc@f0030000 {
+				status = "okay";
+
+				hlcdc-display-controller {
+				pinctrl-names = "default";
+				pinctrl-0 = <&pinctrl_lcd_base &pinctrl_lcd_rgb888>;
+
+					port@0 {
+						hlcdc_panel_output: endpoint@0 {
+							reg = <0>;
+							remote-endpoint = <&panel_input>;
+						};
+					};
+				};
+			};
+
+			mmc0: mmc@f0000000 {
+				pinctrl-names = "default";
+				pinctrl-0 = <&pinctrl_mmc0_clk_cmd_dat0 &pinctrl_mmc0_dat1_3>;
+				status = "okay";
+				slot@0 {
+					reg = <0>;
+					bus-width = <4>;
+					non-removable;
+				};
+			};
+
+			usart0: serial@f001c000 {
+				status = "okay";
+			};
+
+			usart1: serial@f0020000 {
+				pinctrl-names = "default";
+				pinctrl-0 = <&pinctrl_usart1 &pinctrl_usart1_rts_cts>;
+				status = "okay";
+			};
+
+			usart2: serial@f8020000 {
+				pinctrl-names = "default";
+				pinctrl-0 = <&pinctrl_usart2 &pinctrl_usart2_rts_cts>;
+				status = "okay";
+			};
+
+			dbgu: serial@ffffee00 {
+				status = "okay";
+			};
+
+			ssc0: ssc@f0008000 {
+				#sound-dai-cells = <0>;
+				pinctrl-names = "default";
+				pinctrl-0 = <&pinctrl_ssc0_txrx>;
+				status = "okay";
+			};
+
+			adc0: adc@f8018000 {
+				pinctrl-names = "default";
+				pinctrl-0 = <
+					&pinctrl_adc0_ad0
+					&pinctrl_adc0_ad1
+					&pinctrl_adc0_ad2
+					&pinctrl_adc0_ad3
+					&pinctrl_adc0_ad4
+					&pinctrl_adc0_ad5
+					&pinctrl_adc0_ad6
+					&pinctrl_adc0_ad7
+					>;
+
+				atmel,adc-vref = <2500>;
+				atmel,adc-channels-used = <0xff>;
+				atmel,adc-ts-wires = <4>;
+				atmel,adc-ts-pressure-threshold = <10000>;
+				status = "okay";
+			};
+
+			macb0: ethernet@f0028000 {
+				phy-mode = "rgmii";
+				status = "okay";
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				ethernet-phy@3 {
+					reg = <0x3>;
+					interrupt-parent = <&pioD>;
+					interrupts = <19 IRQ_TYPE_EDGE_FALLING>;
+					txen-skew-ps = <800>;
+					txc-skew-ps = <3000>;
+					rxdv-skew-ps = <400>;
+					rxc-skew-ps = <3000>;
+					rxd0-skew-ps = <400>;
+					rxd1-skew-ps = <400>;
+					rxd2-skew-ps = <400>;
+					rxd3-skew-ps = <400>;
+				};
+			};
+		};
+
+		usb0: gadget@00500000 {
+			atmel,vbus-gpio = <&pioC 27 GPIO_ACTIVE_HIGH>;
+			pinctrl-names = "default";
+			pinctrl-0 = <&pinctrl_usba_vbus>;
+			status = "okay";
+		};
+
+		usb1: ohci@00600000 {
+			num-ports = <3>;
+			status = "okay";
+		};
+
+		usb2: ehci@00700000 {
+			status = "okay";
+		};
+	};
+
+	backlight: backlight {
+		compatible = "pwm-backlight";
+		pwms = <&hlcdc_pwm 0 50000 0>;
+		power-supply = <&bl_reg>;
+		enable-gpios = <&pioD 5 GPIO_ACTIVE_HIGH>;
+		brightness-levels = <0 4 8 16 32 64 128 255>;
+		default-brightness-level = <6>;
+		status = "okay";
+	};
+
+	gpio-leds {
+		compatible = "gpio-leds";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_led>;
+		status {
+			label = "status";
+			gpios = <&pioE 22 GPIO_ACTIVE_HIGH>;
+			default-state = "on";
+		};
+	};
+};

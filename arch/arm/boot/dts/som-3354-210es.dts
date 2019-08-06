@@ -1,0 +1,34 @@
+/*
+ * som-3354-210es.dts - Device Tree file for the SOM-3354M with SOM-210ES.
+ *
+ * Copyright (C) 2015 EMAC Inc.
+ * Copyright (C) 2015 QWERTY Embedded Design
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+/dts-v1/;
+
+#include "som-3354.dtsi"
+
+/ {
+	model = "EMAC SOM-3354M SOM-210ES";
+};
+
+&spi0 {
+	spidev2: spidev@2 {
+		compatible = "emac,spidev";
+		reg = <2>;
+		spi-max-frequency = <40000000>;
+		status = "okay";
+	};
+
+	spidev3: spidev@3 {
+		compatible = "emac,spidev";
+		reg = <3>;
+		spi-max-frequency = <40000000>;
+		status = "okay";
+	};
+};

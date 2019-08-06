@@ -1,0 +1,374 @@
+/*
+ * som-9g25-112es.dts - Device Tree file for the SOM-9G25 with the SOM-112.
+ *
+ *  Copyright (C) 2018 EMAC Inc.
+ *
+ * Licensed under GPLv2 or later.
+ */
+/dts-v1/;
+#include "at91sam9g25.dtsi"
+#include <dt-bindings/iio/adi,ad5592r.h>
+
+/ {
+	model = "EMAC SOM-9G25M with SOM-112ES";
+	compatible = "emac,som9g25", "atmel,at91sam9x5", "atmel,at91sam9";
+
+	aliases {
+		serial0 = &usart3;
+		serial1 = &usart0;
+		serial3 = &uart0;
+		serial4 = &usart2;
+		serial5 = &dbgu;
+		spi0 = &spi0;
+		spi1 = &spi1;
+	};
+
+	memory {
+		reg = <0x20000000 0x4000000>;
+	};
+
+	clocks {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges;
+
+		slow_xtal {
+			clock-frequency = <32768>;
+		};
+
+		main_xtal {
+			clock-frequency = <12000000>;
+		};
+
+		audio_osc: audio_osc {
+			compatible = "fixed-clock";
+			#clock-cells = <0>;
+			clock-frequency = <12288000>;
+		};
+	};
+
+	regulators {
+		compatible = "simple-bus";
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		reg_1p8v: regulator-1p8v {
+			compatible = "regulator-fixed";
+			regulator-name = "1P8V";
+			regulator-min-microvolt = <1800000>;
+			regulator-max-microvolt = <1800000>;
+			regulator-boot-on;
+			regulator-always-on;
+		};
+
+		reg_3p3v: regulator-3p3v {
+			compatible = "regulator-fixed";
+			regulator-name = "3P3V";
+			regulator-min-microvolt = <3300000>;
+			regulator-max-microvolt = <3300000>;
+			regulator-always-on;
+		};
+
+		wlan_en_reg: regulator@1 {
+			compatible = "regulator-fixed";
+			regulator-name = "wlan-en-regulator";
+			regulator-min-microvolt = <3300000>;
+			regulator-max-microvolt = <3300000>;
+			gpio = <&pioC 2 1>;
+			regulator-always-on;
+			startup-delay-us = <2000>;
+			enable-active-high;
+               };
+	};
+
+	sound {
+		compatible = "simple-audio-card";
+		simple-audio-card,name = "sgtl5000 @ SOM9G25";
+		simple-audio-card,format = "i2s";
+		simple-audio-card,bitclock-master = <&codec_master>;
+		simple-audio-card,frame-master = <&codec_master>;
+		simple-audio-card,widgets =
+			"Line", "Line In",
+			"Line", "Line Out";
+		simple-audio-card,routing =
+			"Line In", "Capture",
+			"Line Out", "Playback";
+
+		cpu_master: simple-audio-card,cpu {
+			sound-dai = <&ssc0>;
+		};
+
+		codec_master: simple-audio-card,codec {
+			sound-dai = <&codec>;
+			clocks = <&audio_osc>;
+		};
+	};
+
+	ahb {
+		apb {
+			pinctrl@fffff400 {
+				adc0 {
+					pinctrl_adc0: adc0-board {
+						atmel,pins =
+							<AT91_PIOB 11 AT91_PERIPH_GPIO AT91_PINCTRL_NONE
+							 AT91_PIOB 12 AT91_PERIPH_GPIO AT91_PINCTRL_NONE
+							 AT91_PIOB 13 AT91_PERIPH_GPIO AT91_PINCTRL_NONE
+							 AT91_PIOB 14 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
+					};
+				};
+
+				pwm0 {
+					pinctrl_pwm0: pwm0-board {
+						atmel,pins =
+							<AT91_PIOC 18 AT91_PERIPH_C AT91_PINCTRL_NONE
+							 AT91_PIOC 19 AT91_PERIPH_C AT91_PINCTRL_NONE>;
+					};
+				};
+
+				spi0 {
+					pinctrl_spi0_cs: spi0-board {
+						atmel,pins =
+							<AT91_PIOA 14 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP
+							 AT91_PIOC 16 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP
+							 AT91_PIOC 17 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP
+							 AT91_PIOC 12 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
+					};
+				};
+
+				spi1 {
+					pinctrl_spi1_cs: spi1-board {
+						atmel,pins =
+							<AT91_PIOA 31 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP
+							 AT91_PIOA 30 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
+					};
+				};
+			};
+
+			adc0: adc@f804c000 {
+				pinctrl-names = "default";
+				pinctrl-0 = <&pinctrl_adc0>;
+				atmel,adc-channels-used = <0xf>;
+				atmel,adc-vref = <2500>;
+				status = "okay";
+			};
+
+			pwm0: pwm@f8034000 {
+				pinctrl-names = "default";
+				pinctrl-0 = <&pinctrl_pwm0>;
+				status = "okay";
+			};
+
+			mmc0: mmc@f0008000 {
+				pinctrl-names = "default";
+				pinctrl-0 = <
+					&pinctrl_mmc0_slot0_clk_cmd_dat0
+					&pinctrl_mmc0_slot0_dat1_3>;
+				vmmc-supply = <&wlan_en_reg>;
+				status = "okay";
+				slot@0 {
+					reg = <0>;
+					bus-width = <4>;
+				};
+			};
+
+			macb0: ethernet@f802c000 {
+				phy-mode = "rmii";
+				status = "okay";
+			};
+
+			rtc: rtc@fffffeb0 {
+				status = "okay";
+			};
+
+			dbgu: serial@fffff200 {
+				status = "okay";
+			};
+
+			usart0: serial@f801c000 {
+				pinctrl-names = "default";
+				pinctrl-0 = <
+					&pinctrl_usart0
+					&pinctrl_usart0_rts>;
+				rs485-rts-delay = <0 1>;
+				status = "okay";
+			};
+
+			usart2: serial@f8024000 {
+				status = "okay";
+			};
+
+			usart3: serial@f8028000 {
+				pinctrl-names = "default";
+				pinctrl-0 = <
+					&pinctrl_usart3
+					&pinctrl_usart3_rts
+					&pinctrl_usart3_cts>;
+				status = "okay";
+			};
+
+			uart0: serial@f8040000 {
+				status = "okay";
+			};
+
+			spi0: spi@f0000000 {
+				cs-gpios = <&pioC 16 0
+					    &pioC 17 0
+					    &pioC 12 0
+					    &pioA 14 0>;
+				pinctrl-0 = <&pinctrl_spi0 &pinctrl_spi0_cs>;
+				status = "okay";
+
+				spidev0: spidev@0 {
+					compatible = "emac,spidev";
+					reg = <0>;
+					spi-max-frequency = <40000000>;
+				};
+
+				spidev1: spidev@1 {
+					compatible = "emac,spidev";
+					reg = <1>;
+					spi-max-frequency = <40000000>;
+				};
+
+				spidev2: spidev@2 {
+					compatible = "emac,spidev";
+					reg = <2>;
+					spi-max-frequency = <40000000>;
+				};
+
+				flash: n25q128a13@3 {
+					compatible = "micron,n25q128a13";
+					spi-max-frequency = <40000000>;
+					reg = <3>;
+				};
+			};
+
+			spi1: spi@f0004000 {
+				cs-gpios = <&pioA 31 0
+					    &pioA 30 0>;
+				pinctrl-0 = <&pinctrl_spi1 &pinctrl_spi1_cs>;
+				status = "okay";
+
+				spidev10: spidev@10 {
+					compatible = "emac,spidev";
+					reg = <0>;
+					spi-max-frequency = <40000000>;
+				};
+
+				spidev11: spidev@11 {
+					compatible = "emac,spidev";
+					reg = <1>;
+					spi-max-frequency = <40000000>;
+				};
+			};
+
+			ssc0: ssc@f0010000 {
+				#sound-dai-cells = <0>;
+				status = "okay";
+			};
+
+			usb2: gadget@f803c000 {
+				status = "okay";
+			};
+
+			i2c1: i2c@f8014000 {
+				status = "okay";
+
+				gpio: ad5593r@10 {
+					#size-cells = <0>;
+					#address-cells = <1>;
+					#gpio-cells = <2>;
+					compatible = "adi,ad5593r";
+					reg = <0x10>;
+					gpio-controller;
+
+					channel@0 {
+						reg = <0>;
+						adi,mode = <CH_MODE_GPIO>;
+						adi,off-state = <CH_OFFSTATE_PULLDOWN>;
+					};
+
+					channel@1 {
+						reg = <1>;
+						adi,mode = <CH_MODE_GPIO>;
+						adi,off-state = <CH_OFFSTATE_PULLDOWN>;
+					};
+
+					channel@2 {
+						reg = <2>;
+						adi,mode = <CH_MODE_GPIO>;
+						adi,off-state = <CH_OFFSTATE_PULLDOWN>;
+					};
+
+					channel@3 {
+						reg = <3>;
+						adi,mode = <CH_MODE_GPIO>;
+						adi,off-state = <CH_OFFSTATE_PULLDOWN>;
+					};
+
+					channel@4 {
+						reg = <4>;
+						adi,mode = <CH_MODE_DAC_AND_ADC>;
+						adi,off-state = <CH_OFFSTATE_PULLDOWN>;
+					};
+	
+					channel@5 {
+						reg = <5>;
+						adi,mode = <CH_MODE_DAC_AND_ADC>;
+						adi,off-state = <CH_OFFSTATE_PULLDOWN>;
+					};
+
+					channel@6 {
+						reg = <6>;
+						adi,mode = <CH_MODE_DAC_AND_ADC>;
+						adi,off-state = <CH_OFFSTATE_PULLDOWN>;
+					};
+
+					channel@7 {
+						reg = <7>;
+						adi,mode = <CH_MODE_DAC_AND_ADC>;
+						adi,off-state = <CH_OFFSTATE_PULLDOWN>;
+					};
+				};
+
+				codec: sgtl5000@0a {
+					#sound-dai-cells = <0>;
+					reg = <0x0a>;
+					compatible = "fsl,sgtl5000";
+					clocks = <&audio_osc>;
+					VDDA-supply = <&reg_3p3v>;
+					VDDIO-supply = <&reg_3p3v>;
+					VDDD-supply = <&reg_1p8v>;
+				};
+			};
+		};
+
+		nand0: nand@40000000 {
+			nand-bus-width = <8>;
+			nand-ecc-mode = "hw";
+			atmel,has-pmecc;	/* Enable PMECC */
+			atmel,pmecc-cap = <4>;
+			atmel,pmecc-sector-size = <512>;
+			nand-on-flash-bbt;
+			status = "okay";
+		};
+
+		usb0: ohci@00600000 {
+			status = "okay";
+			num-ports = <3>;
+		};
+
+		usb1: ehci@00700000 {
+			status = "okay";
+		};
+	};
+
+	gpio-leds {
+		compatible = "gpio-leds";
+		led-stat {
+			label = "status";
+			gpios = <&pioC 10 1>;
+			default-state = "on";
+		};
+	};
+};

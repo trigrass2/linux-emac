@@ -43,7 +43,14 @@ dtb-$(CONFIG_SOC_AT91SAM9) += \
 	at91sam9g25ek.dtb \
 	at91sam9g35ek.dtb \
 	at91sam9x25ek.dtb \
-	at91sam9x35ek.dtb
+	at91sam9x35ek.dtb \
+	som-9g20-150es.dtb \
+	som-9g20-112es.dtb \
+	som-9g25-150es.dtb \
+	som-9g25-112es.dtb \
+	som-9x25-150es.dtb \
+	som-9x25-112es.dtb \
+	ipac-9x25.dtb
 dtb-$(CONFIG_SOC_SAM_V7) += \
 	at91-kizbox2.dtb \
 	at91-nattis-2-natte-2.dtb \
@@ -64,7 +71,11 @@ dtb-$(CONFIG_SOC_SAM_V7) += \
 	at91-sama5d4_ma5d4evk.dtb \
 	at91-sama5d4_xplained.dtb \
 	at91-sama5d4ek.dtb \
-	at91-vinco.dtb
+	at91-vinco.dtb \
+	som-a5d35-150es.dtb \
+	som-a5d35-112es.dtb \
+	som-a5d36-200gs.dtb \
+	som-a5d36-250gs.dtb
 dtb-$(CONFIG_ARCH_ATLAS6) += \
 	atlas6-evb.dtb
 dtb-$(CONFIG_ARCH_ATLAS7) += \
@@ -529,7 +540,9 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
 	imx6qp-tx6qp-8137.dtb \
 	imx6qp-tx6qp-8137-mb7.dtb \
 	imx6qp-wandboard-revd1.dtb \
-	imx6qp-zii-rdu2.dtb
+	imx6qp-zii-rdu2.dtb \
+	som-imx6q-350es.dtb \
+	som-imx6q-350es-10.dtb
 dtb-$(CONFIG_SOC_IMX6SL) += \
 	imx6sl-evk.dtb \
 	imx6sl-warp.dtb
@@ -559,7 +572,9 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
 	imx6ul-tx6ul-mainboard.dtb \
 	imx6ull-14x14-evk.dtb \
 	imx6ull-colibri-eval-v3.dtb \
-	imx6ull-colibri-wifi-eval-v3.dtb
+	imx6ull-colibri-wifi-eval-v3.dtb \
+	som-imx6ul-150es.dtb \
+	som-imx6ul-112es.dtb
 dtb-$(CONFIG_SOC_IMX7D) += \
 	imx7d-cl-som-imx7.dtb \
 	imx7d-colibri-emmc-eval-v3.dtb \
@@ -683,7 +698,10 @@ dtb-$(CONFIG_ARCH_OMAP3) += \
 	omap3-sbc-t3730.dtb \
 	omap3-sniper.dtb \
 	omap3-thunder.dtb \
-	omap3-zoom3.dtb
+	omap3-zoom3.dtb \
+	som-3517-210es.dtb \
+	som-3517-212es.dtb \
+	som-3517-250gs-7.dtb
 dtb-$(CONFIG_SOC_TI81XX) += \
 	dm8148-evm.dtb \
 	dm8148-t410.dtb \
@@ -717,7 +735,14 @@ dtb-$(CONFIG_SOC_AM33XX) += \
 	am335x-sbc-t335.dtb \
 	am335x-sl50.dtb \
 	am335x-wega-rdk.dtb \
-	am335x-osd3358-sm-red.dtb
+	am335x-osd3358-sm-red.dtb \
+        som-3354-200es.dtb \
+        som-3354-200gs.dtb \
+        som-3354-210es.dtb \
+        som-3354-212es.dtb \
+        som-3354-250es-7.dtb \
+        som-3354-250es-10.dtb \
+        som-3354-250gs-7.dtb
 dtb-$(CONFIG_ARCH_OMAP4) += \
 	omap4-droid4-xt894.dtb \
 	omap4-duovero-parlor.dtb \

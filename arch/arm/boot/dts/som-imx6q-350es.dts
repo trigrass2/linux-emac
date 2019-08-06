@@ -1,0 +1,298 @@
+/*
+ * Copyright 2016 EMAC Inc.
+ * Copyright 2016 QWERTY Embedded Design
+ *
+ * Author: Michael Welling <mwelling@ieee.org>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ *
+ */
+
+/dts-v1/;
+#include "imx6q.dtsi"
+#include "som-imx6dq.dtsi"
+#include <dt-bindings/sound/fsl-imx-audmux.h>
+
+/ {
+	model = "EMAC SOM-iMX6 Quad with SOM-350ES";
+	compatible = "emac,som-imx6q-350es", "fsl,imx6q";
+
+	chosen {
+		stdout-path = &uart2;
+	};
+
+	memory {
+		device_type = "memory";
+		reg = <0x10000000 0x80000000>;
+	};
+
+	clocks {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		tlv320_mclk: tlv320_mclk {
+			#clock-cells = <0>;
+			compatible = "fixed-clock";
+			clock-frequency = <12000000>;
+			clock-output-names = "mclk";
+		};
+	};
+
+	regulators {
+		wlan_en_reg: regulator@3 {
+		        compatible = "regulator-fixed";
+		        reg = <3>;
+		        regulator-name = "wlan-en-regulator";
+		        regulator-min-microvolt = <1800000>;
+		        regulator-max-microvolt = <1800000>;
+		        gpio = <&gpio5 5 0>;
+
+		        startup-delay-us = <70000>;
+		        enable-active-high;
+		};
+		lvds_3p3v: lvds_3p3v_reg {
+			compatible = "regulator-fixed";
+			reg = <4>;
+			regulator-name = "LVDS 3P3V";
+			regulator-min-microvolt = <3300000>;
+			regulator-max-microvolt = <3300000>;
+			regulator-boot-on;
+			enable-active-high;
+			gpio = <&gpio1 29 GPIO_ACTIVE_HIGH>;
+		};
+	};
+
+	sound {
+		compatible = "fsl,imx-audio-aic32x4";
+		model = "tlv320aic32x4";
+		audio-codec = <&codec>;
+		ssi-controller = <&ssi1>;
+		audio-routing =
+			"Headphone Jack", "HPL",
+			"Headphone Jack", "HPR",
+			"IN1_L", "Mic Jack",
+			"IN1_R", "Mic Jack",
+			"Mic Jack", "Mic Bias";
+		mux-ext-port = <4>;
+		mux-int-port = <1>;
+	};
+
+	beeper: beeper {
+		compatible = "gpio-beeper";
+		gpios = <&gpio5 8 GPIO_ACTIVE_HIGH>;
+	};
+
+	backlight: backlight {
+		compatible = "gpio-backlight";
+		gpios = <&gpio5 7 GPIO_ACTIVE_HIGH>;
+		default-on;
+		status = "okay";
+	};
+
+	panel {
+		compatible = "innolux,at070tn92", "simple-panel";
+		backlight = <&backlight>;
+		power-supply = <&lvds_3p3v>;
+
+		port {
+			panel_in: endpoint {
+				remote-endpoint = <&lvds0_out>;
+			};
+		};
+	};
+};
+
+&audmux {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_audmux>;
+	status = "okay";
+};
+
+&ldb {
+	status = "okay";
+
+	lvds-channel@0 {
+		fsl,data-mapping = "spwg";
+		fsl,data-width = <18>;
+		status = "okay";
+
+		port@4 {
+			reg = <4>;
+
+			lvds0_out: endpoint {
+				remote-endpoint = <&panel_in>;
+			};
+		};
+	};
+};
+
+&i2c1 {
+	eeprom@50 {
+		compatible = "st,24c32";
+		reg = <0x50>;
+		pagesize = <32>;
+	};
+};
+
+
+&i2c2 {
+	codec: tlv320aic32x4@18{
+		compatible = "ti,tlv320aic32x4";
+		#sound-dai-cells = <0>;
+		reg = <0x18>;
+		clocks = <&tlv320_mclk>;
+		clock-names = "mclk";
+		iov-supply = <&reg_3p3v>;
+		ldoin-supply = <&reg_3p3v>;
+		input-use = <1 1 0 0 0 0>;
+		cmode = <0x11 0>;
+		status = "okay";
+	};
+};
+
+&i2c3 {
+	touchscreen: tsc2004@48 {
+		compatible = "ti,tsc2004";
+		reg = <0x48>;
+		vio-supply = <&reg_3p3v>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_tsc>;
+		interrupts-extended = <&gpio1 27 IRQ_TYPE_EDGE_RISING>;
+
+		touchscreen-fuzz-x = <4>;
+		touchscreen-fuzz-y = <7>;
+		touchscreen-fuzz-pressure = <2>;
+		touchscreen-size-x = <4096>;
+		touchscreen-size-y = <4096>;
+		touchscreen-max-pressure = <400>;
+
+		ti,x-plate-ohms = <850>;
+		ti,esd-recovery-timeout-ms = <800>;
+	};
+};
+
+&ecspi1 {
+	spidev1: spi@1 {
+		compatible = "emac,spidev";
+		reg = <1>;
+		spi-max-frequency = <60000000>;
+	};
+
+	spidev2: spi@2 {
+		compatible = "emac,spidev";
+		reg = <2>;
+		spi-max-frequency = <60000000>;
+	};
+
+	spidev3: spi@3 {
+		compatible = "emac,spidev";
+		reg = <3>;
+		spi-max-frequency = <60000000>;
+	};
+};
+
+&ecspi3 {
+
+	spidev4: spi@4 {
+		compatible = "emac,spidev";
+		reg = <1>;
+		spi-max-frequency = <60000000>;
+	};
+
+	spidev5: spi@5 {
+		compatible = "emac,spidev";
+		reg = <2>;
+		spi-max-frequency = <60000000>;
+	};
+
+	spidev6: spi@6 {
+		compatible = "emac,spidev";
+		reg = <3>;
+		spi-max-frequency = <60000000>;
+	};
+};
+
+&iomuxc {
+	imx6qdl-350es {
+		pinctrl_wifi: wifigrp {
+			fsl,pins = <
+				MX6QDL_PAD_NANDF_CS3__GPIO6_IO16   	0x13059		/* WL_IRQ */
+				MX6QDL_PAD_DISP0_DAT11__GPIO5_IO05 	0x13059		/* WL_EN */
+			>;
+		};
+		pinctrl_bt: btgrp {
+			fsl,pins = <
+				MX6QDL_PAD_DISP0_DAT12__GPIO5_IO06	0x13059		/* BT_EN */
+			>;
+		};
+		pinctrl_tsc: tscgrp {
+			fsl,pins = <
+				MX6QDL_PAD_ENET_RXD0__GPIO1_IO27	0x1b0b0
+ 			>;
+ 		};
+	};
+};
+
+&usdhc2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_usdhc2>;
+	vmmc-supply = <&reg_3p3v>;
+	cd-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
+	status = "okay";
+};
+
+
+&usdhc4 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_usdhc4 &pinctrl_wifi>;
+	status = "okay";
+	vmmc-supply = <&wlan_en_reg>;
+        cap-power-off-card;
+        keep-power-in-suspend;
+	enable-sdio-wakeup;
+	no-1-8-v;
+	non-removable;
+
+        #address-cells = <1>;
+        #size-cells = <0>;
+        wlcore: wlcore@0 {
+                compatible = "ti,wl1835";
+                reg = <0x2>;
+		interrupt-parent = <&gpio6>;
+		interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
+	};
+};
+
+&sata {
+	status = "okay";
+};
+
+&pwm1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_pwm1>;
+	#pwm-cells = <3>;
+	status = "okay";
+};
+
+&pwm2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_pwm2>;
+	#pwm-cells = <3>;
+	status = "okay";
+};
+
+&pwm3 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_pwm3>;
+	#pwm-cells = <3>;
+	status = "okay";
+};
+
+&pwm4 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_pwm4>;
+	#pwm-cells = <3>;
+	status = "okay";
+};

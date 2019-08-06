@@ -1,0 +1,51 @@
+/*
+ * som-3354-200es.dts - Device Tree file for the SOM-3354M with SOM-200ES.
+ *
+ * Copyright (C) 2015 EMAC Inc.
+ * Copyright (C) 2015 QWERTY Embedded Design
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+/dts-v1/;
+
+#include "som-3354.dtsi"
+
+/ {
+	model = "EMAC SOM-3354M SOM-212ES";
+
+	sound {
+		compatible = "emac,som3354-cs4271-snd";
+		ti,model = "SOM3354 CS4271";
+		ti,audio-codec = <&cs4271>;
+		ti,mcasp-controller = <&mcasp0>;
+		ti,codec-clock-rate = <12288000>;
+		clocks = <&si5351 2>;
+		clock-names = "mclk";
+		ti,audio-routing =
+			"Line Out",       "AOUTA+",
+			"Line Out",       "AOUTA-",
+			"Line Out",       "AOUTB+",
+			"Line Out",       "AOUTB-";
+	};
+};
+
+&spi0 {
+	cs4271: cs4271@2 {
+		compatible = "cirrus,cs4271";
+		spi-cpol;
+		spi-cpha;
+		reg = <2>;
+		spi-max-frequency = <1000000>;
+		status = "okay";
+	};
+
+	spidev3: spidev@3 {
+		compatible = "emac,spidev";
+		reg = <3>;
+		spi-max-frequency = <40000000>;
+		status = "okay";
+	};
+};

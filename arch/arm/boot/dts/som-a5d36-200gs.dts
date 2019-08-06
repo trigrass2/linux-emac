@@ -1,0 +1,244 @@
+/*
+ * som-a5d36-200gs.dts - Device Tree file for the SoM-A5D36 / SoM-200GS.
+ *
+ *  Copyright (C) 2015 EMAC Inc.
+ *
+ * Licensed under GPLv2 or later.
+ */
+/dts-v1/;
+#include "som-a5d36.dtsi"
+
+/ {
+	model = "EMAC SOM-A5D36 with SOM-200GS";
+
+	ahb {
+		apb {
+			pinctrl@fffff200 {
+				mmc1 {
+					pinctrl_mmc1_cd_wp: mmc1_cd_wp {
+						atmel,pins =
+							<AT91_PIOC 5 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH
+							 AT91_PIOC 13 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH
+							 AT91_PIOC 14 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH>;
+					};
+				};
+
+				led {
+					pinctrl_led: led-board {
+						atmel,pins =
+							<AT91_PIOE 22 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
+					};
+				};
+
+				smc {
+					pinctrl_smc: smc05-board {
+						atmel,pins =
+							<AT91_PIOE 27 AT91_PERIPH_A AT91_PINCTRL_NONE
+							 AT91_PIOE 28 AT91_PERIPH_A AT91_PINCTRL_NONE>;
+ 					};
+				};
+
+			};
+
+			mmc1: mmc@f8000000 {
+				pinctrl-names = "default";
+				pinctrl-0 = <&pinctrl_mmc1_clk_cmd_dat0 &pinctrl_mmc1_dat1_3 &pinctrl_mmc1_cd_wp>;
+				status = "okay";
+				slot@0 {
+					reg = <0>;
+					bus-width = <4>;
+				};
+			};
+
+			spi0: spi@f0004000 {
+				cs-gpios = <&pioD 13 0>, <&pioD 14 0>, <&pioD 15 0>, <&pioD 16 0>;
+				status = "okay";
+				m25p80@0 {
+					compatible = "atmel,n25q128a13";
+					spi-max-frequency = <50000000>;
+					reg = <0>;
+				};
+				spidev@1 {
+					compatible = "emac,spidev";
+					spi-max-frequency = <40000000>;
+					reg = <1>;
+					status = "okay";
+				};
+				spidev@2 {
+					compatible = "emac,spidev";
+					spi-max-frequency = <40000000>;
+					reg = <2>;
+					status = "okay";
+				};
+				cs4271: cs4271@3 {
+					#sound-dai-cells = <0>;
+					compatible = "cirrus,cs4271";
+					spi-cpol;
+					spi-cpha;
+					reg = <3>;
+					clocks = <&audio_mclk>;
+					spi-max-frequency = <1000000>;
+					status = "okay";
+				};
+			};
+
+			i2c0: i2c@f0014000 {
+				status = "okay";
+			};
+
+			pwm0: pwm@f002c000 {
+				pinctrl-names = "default";
+				pinctrl-0 = <&pinctrl_pwm0_pwml1_2>, <&pinctrl_pwm0_pwmh3_1>;
+				status = "okay";
+			};
+		};
+
+		matrix: matrix@ffffec00 {
+			compatible = "atmel,sama5d3-matrix", "syscon";
+			reg = <0xffffec00 0x200>;
+		};
+
+		smc: smc@ffffc000 {
+			compatible = "atmel,sama5d3-smc", "syscon";
+			reg = <0xffffc000 0x1000>;
+		};
+
+		ebi: ebi@10000000 {
+			compatible = "atmel,sama5d3-ebi";
+			#address-cells = <2>;
+			#size-cells = <1>;
+			atmel,smc = <&smc>;
+			atmel,matrix = <&matrix>;
+			reg = <0x10000000 0x10000000
+				0x40000000 0x30000000>;
+			ranges = <0x0 0x0 0x10000000 0x10000000
+				  0x1 0x0 0x40000000 0x10000000
+				  0x2 0x0 0x50000000 0x10000000
+				  0x3 0x0 0x60000000 0x10000000>;
+			clocks = <&hsmc_clk>;
+
+			pinctrl-names = "default";
+			pinctrl-0 = <&pinctrl_smc &pinctrl_pck0>;
+
+			portc@2,4 {
+				compatible = "emac,mmio-gpio";
+				reg-names = "dat";
+				reg = <2 4 1>;
+				gpio-controller;
+				no-input;
+				#address-cells = <1>;
+				#size-cells = <1>;
+				#gpio-cells = <1>;
+				bank-width = <1>;
+
+				atmel,smc-read-mode = "nrd";
+				atmel,smc-write-mode = "nwe";
+				atmel,smc-bus-width = <8>;
+				atmel,smc-ncs-rd-setup-ns = <8>;
+				atmel,smc-ncs-wr-setup-ns = <8>;
+				atmel,smc-nwe-setup-ns = <16>;
+				atmel,smc-nrd-setup-ns = <16>;
+				atmel,smc-ncs-rd-pulse-ns = <40>;
+				atmel,smc-ncs-wr-pulse-ns = <40>;
+				atmel,smc-nrd-pulse-ns = <24>;
+				atmel,smc-nwe-pulse-ns = <24>;
+				atmel,smc-nrd-cycle-ns = <64>;
+				atmel,smc-nwe-cycle-ns = <64>;
+				atmel,smc-tdf-ns = <16>;
+			};
+
+			portb@2,2 {
+				compatible = "emac,mmio-gpio";
+				reg-names = "dat", "dirout";
+				reg = <2 2 1>, <2 3 1>;
+				gpio-controller;
+				#address-cells = <1>;
+				#size-cells = <1>;
+				#gpio-cells = <1>;
+				bank-width = <1>;
+			};
+
+			porta@2,0 {
+				compatible = "emac,mmio-gpio";
+				reg-names = "dat", "dirout";
+				reg = <2 0 1>, <2 1 1>;
+				gpio-controller;
+				#address-cells = <1>;
+				#size-cells = <1>;
+				#gpio-cells = <1>;
+				bank-width = <1>;
+			};
+
+			comshdn@2,6 {
+				compatible = "emac,mmio-gpio";
+				reg-names = "dat";
+				reg = <2 6 1>;
+				gpio-controller;
+				no-input;
+				#address-cells = <1>;
+				#size-cells = <1>;
+				#gpio-cells = <1>;
+				bank-width = <1>;
+			};
+
+			handy@2,8 {
+				compatible = "emac,mmio-gpio";
+				reg-names = "dat", "dirout";
+				reg = <2 8 1>, <2 9 1>;
+				gpio-controller;
+				#address-cells = <1>;
+				#size-cells = <1>;
+				#gpio-cells = <1>;
+				bank-width = <1>;
+			};
+
+			id@2,7 {
+				compatible = "emac,emac-cpld-id";
+				reg = <2 7 1>;
+				#address-cells = <1>;
+				#size-cells = <1>;
+			};
+		};
+	};
+
+	sound {
+		compatible = "simple-audio-card";
+		simple-audio-card,format = "i2s";
+		simple-audio-card,name = "cs4271 @ SOMA5D36";
+		simple-audio-card,bitclock-master = <&codec_master>;
+		simple-audio-card,frame-master = <&codec_master>;
+		simple-audio-card,widgets =
+			"Line", "Line In",
+			"Line", "Line Out";
+		simple-audio-card,routing =
+			"Line In", "Capture",
+			"Line Out", "Playback";
+
+		cpu_master: simple-audio-card,cpu {
+			sound-dai = <&ssc0>;
+		};
+
+		codec_master: simple-audio-card,codec {
+			sound-dai = <&cs4271>;
+		};
+	};
+
+	panel: panel {
+		compatible = "innolux,at043tn24", "simple-panel";
+		backlight = <&backlight>;
+		power-supply = <&lvds_3p3v>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+		status = "okay";
+
+		port@0 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			panel_input: endpoint@0 {
+				reg = <0>;
+				remote-endpoint = <&hlcdc_panel_output>;
+			};
+		};
+	};
+};

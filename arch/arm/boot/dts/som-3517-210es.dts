@@ -1,0 +1,44 @@
+/*
+ * som-3517-210es.dts - Device Tree file for the SOM-3517M with SOM-210ES. 
+ *
+ * Copyright (C) 2017 EMAC Inc.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+/dts-v1/;
+
+#include "som-3517.dtsi"
+
+/ {
+	model = "EMAC SOM-3517M SOM-210ES";
+};
+
+&mcspi1 {
+	spidev@0 {
+		compatible = "emac,spidev";
+		spi-max-frequency = <48000000>;
+		reg = <0>;
+	};
+
+	spidev@1 {
+		compatible = "emac,spidev";
+		spi-max-frequency = <48000000>;
+		reg = <1>;
+	};
+
+	spidev@2 {
+		compatible = "emac,spidev";
+		spi-max-frequency = <48000000>;
+		reg = <2>;
+	};
+
+	spidev@3 {
+		compatible = "emac,spidev";
+		spi-max-frequency = <48000000>;
+		reg = <3>;
+	};
+};
+

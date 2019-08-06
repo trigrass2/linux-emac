@@ -1,0 +1,190 @@
+/*
+ * som-3354-200es.dts - Device Tree file for the SOM-3354M with SOM-200ES.
+ *
+ * Copyright (C) 2015 EMAC Inc.
+ * Copyright (C) 2015 QWERTY Embedded Design
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+/dts-v1/;
+
+#include "som-3354.dtsi"
+
+/ {
+	model = "EMAC SOM-3354M SOM-200ES";
+
+	sound {
+		compatible = "emac,som3354-cs4271-snd";
+		ti,model = "SOM3354 CS4271";
+		ti,audio-codec = <&cs4271>;
+		ti,mcasp-controller = <&mcasp0>;
+		ti,codec-clock-rate = <12288000>;
+		clocks = <&si5351 2>;
+		clock-names = "mclk";
+		ti,audio-routing =
+			"Line Out",       "AOUTA+",
+			"Line Out",       "AOUTA-",
+			"Line Out",       "AOUTB+",
+			"Line Out",       "AOUTB-";
+	};
+};
+
+&gpmc {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&gpmc_pins>;
+
+	ranges = <0x3 0 0x08000000 0x1000000    /* CS3: DUART */
+		  0x4 0 0x09000000 0x1000000>;	/* CS4: CPLD */
+
+	uart@3,0 {
+		compatible = "ns16550a";
+		reg = <0x3 0x0 0x8>;
+		clock-frequency = <18432000>;
+		bank-width = <1>;
+		reg-shift = <0>;
+		reg-io-width = <1>;
+		fifo-size = <16>;
+		interrupt-parent = <&gpio3>;
+		interrupts = <9 1>;
+		gpmc,mux-add-data = <0>;
+		gpmc,device-width = <1>;
+		gpmc,wait-pin = <0>;
+		gpmc,cycle2cycle-samecsen = <1>;
+		gpmc,cycle2cycle-diffcsen = <1>;
+		gpmc,cs-on-ns = <18>;
+		gpmc,cs-rd-off-ns = <295>;
+		gpmc,cs-wr-off-ns = <295>;
+		gpmc,adv-on-ns = <73>;
+		gpmc,adv-rd-off-ns = <92>;
+		gpmc,adv-wr-off-ns = <110>;
+		gpmc,oe-on-ns = <110>;
+		gpmc,oe-off-ns = <295>;
+		gpmc,we-on-ns = <92>;
+		gpmc,we-off-ns = <295>;
+		gpmc,rd-cycle-ns = <300>;
+		gpmc,wr-cycle-ns = <300>;
+		gpmc,access-ns = <276>;
+		gpmc,page-burst-access-ns = <18>;
+		gpmc,bus-turnaround-ns = <20>;
+		gpmc,cycle2cycle-delay-ns = <20>;
+		gpmc,wr-access-ns = <276>;
+		status = "okay";
+	};
+
+	uart@3,8 {
+		compatible = "ns16550a";
+		reg = <0x3 0x8 0x8>;
+		interrupt-parent = <&gpio3>;
+		interrupts = <10 1>;
+		clock-frequency = <18432000>;
+		bank-width = <1>;
+		reg-shift = <0>;
+		reg-io-width = <1>;
+		fifo-size = <16>;
+		status = "okay";
+	};
+
+	portc: cpld@portc {
+		compatible = "emac,mmio-gpio";
+		reg-names = "dat";
+		reg = <0x4 0x4 0x1>;
+		bank-width = <1>;
+		gpio-controller;
+		no-input;
+		#gpio-cells = <1>;
+		status = "okay";
+
+		gpmc,mux-add-data = <0>;
+		gpmc,device-width = <1>;
+		gpmc,wait-pin = <0>;
+		gpmc,cycle2cycle-samecsen = <1>;
+		gpmc,cycle2cycle-diffcsen = <1>;
+		gpmc,cs-on-ns = <20>;
+		gpmc,cs-rd-off-ns = <300>;
+		gpmc,cs-wr-off-ns = <300>;
+		gpmc,adv-on-ns = <80>;
+		gpmc,adv-rd-off-ns = <100>;
+		gpmc,adv-wr-off-ns = <110>;
+		gpmc,oe-on-ns = <110>;
+		gpmc,oe-off-ns = <300>;
+		gpmc,we-on-ns = <100>;
+		gpmc,we-off-ns = <300>;
+		gpmc,rd-cycle-ns = <300>;
+		gpmc,wr-cycle-ns = <300>;
+		gpmc,access-ns = <280>;
+		gpmc,page-burst-access-ns = <20>;
+		gpmc,bus-turnaround-ns = <20>;
+		gpmc,cycle2cycle-delay-ns = <20>;
+		gpmc,wr-access-ns = <280>;
+	};
+
+	portb: cpld@portb {
+		compatible = "emac,mmio-gpio";
+		reg-names = "dat", "dirout";
+		reg = <0x4 0x2 0x1>;
+		bank-width = <1>;
+		gpio-controller;
+		#gpio-cells = <1>;
+		status = "okay";
+	};
+
+	porta: cpld@porta {
+		compatible = "emac,mmio-gpio";
+		reg-names = "dat", "dirout";
+		reg = <0x4 0x0 0x1>;
+		bank-width = <1>;
+		gpio-controller;
+		#gpio-cells = <1>;
+		status = "okay";
+	};
+
+	control: cpld@comshtdn {
+		compatible = "emac,mmio-gpio";
+		reg-names = "dat";
+		reg = <0x4 0x6 0x1>;
+		bank-width = <1>;
+		no-input;
+		gpio-controller;
+		#gpio-cells = <1>;
+		status = "okay";
+	};
+
+	gpio: cpld@handy {
+		compatible = "emac,mmio-gpio";
+		reg-names = "dat", "dirout";
+		reg = <0x4 0x8 0x1>;
+		bank-width = <1>;
+		gpio-controller;
+		#gpio-cells = <1>;
+		status = "okay";
+	};
+
+	id: cpld@id {
+		compatible = "emac,emac-cpld-id";
+		reg = <0x4 0x7 0x1>;
+		#address-cells = <1>;
+		#size-cells = <1>;
+	};
+};
+
+&spi0 {
+	cs4271: cs4271@2 {
+		compatible = "cirrus,cs4271";
+		spi-cpol;
+		spi-cpha;
+		reg = <2>;
+		spi-max-frequency = <1000000>;
+		status = "okay";
+	};
+
+	spidev3: spidev@3 {
+		compatible = "emac,spidev";
+		reg = <3>;
+		spi-max-frequency = <40000000>;
+		status = "okay";
+	};
+};
