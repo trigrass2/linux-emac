@@ -341,6 +341,12 @@
 					VDDD-supply = <&reg_1p8v>;
 				};
 			};
+
+			reset_controller: rstc@fffffe00 {
+				compatible = "atmel,sama5d3-rstc";
+				reg = <0xfffffe00 0x10>;
+				clocks = <&clk32k>;
+			};
 		};
 
 		nand0: nand@40000000 {
