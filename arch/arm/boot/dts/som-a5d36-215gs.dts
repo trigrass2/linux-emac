@@ -1,0 +1,119 @@
+/*
+ * som-a5d36-200gs.dts - Device Tree file for the SoM-A5D36 / SoM-200GS.
+ *
+ *  Copyright (C) 2015 EMAC Inc.
+ *
+ * Licensed under GPLv2 or later.
+ */
+/dts-v1/;
+#include "som-a5d36.dtsi"
+
+/ {
+	model = "EMAC SOM-A5D36 with SOM-215GS";
+
+	ahb {
+		apb {
+			pinctrl@fffff200 {
+				led {
+					pinctrl_led: led-board {
+						atmel,pins =
+							<AT91_PIOE 22 AT91_PERIPH_GPIO AT91_PINCTRL_NONE
+							 AT91_PIOC 14 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
+					};
+				};
+			};
+
+			spi0: spi@f0004000 {
+				cs-gpios = <&pioD 13 0>, <&pioD 14 0>, <&pioD 15 0>, <&pioD 16 0>;
+				status = "okay";
+				m25p80@0 {
+					compatible = "atmel,n25q128a13";
+					spi-max-frequency = <50000000>;
+					reg = <0>;
+				};
+				spidev@1 {
+					compatible = "emac,spidev";
+					spi-max-frequency = <1000000>;
+					reg = <1>;
+					status = "okay";
+				};
+				spidev@2 {
+					compatible = "emac,spidev";
+					spi-max-frequency = <1000000>;
+					reg = <2>;
+					status = "okay";
+				};
+				fm25v20a@3 {
+					compatible = "jedec,spi-nor";
+					spi-max-frequency = <50000000>;
+					reg = <3>;
+				};
+			};
+
+			i2c0: i2c@f0014000 {
+				status = "okay";
+			};
+
+			macb1: ethernet@f802c000 {
+				phy-mode = "rmii";
+				status = "okay";
+
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				ethernet-phy@1 {
+					reg = <0x1>;
+					txen-skew-ps = <800>;
+					txc-skew-ps = <3000>;
+					rxdv-skew-ps = <400>;
+					rxc-skew-ps = <3000>;
+					rxd0-skew-ps = <400>;
+					rxd1-skew-ps = <400>;
+					rxd2-skew-ps = <400>;
+					rxd3-skew-ps = <400>;
+				};
+			};
+		};
+	};
+
+	panel: panel {
+		compatible = "innolux,at043tn24", "simple-panel";
+		backlight = <&backlight>;
+		power-supply = <&lvds_3p3v>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+		status = "okay";
+
+		port@0 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			panel_input: endpoint@0 {
+				reg = <0>;
+				remote-endpoint = <&hlcdc_panel_output>;
+			};
+		};
+	};
+
+	gpio-leds {
+		compatible = "gpio-leds";
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_led>;
+		status {
+			label = "status";
+			gpios = <&pioE 22 GPIO_ACTIVE_HIGH>;
+			default-state = "on";
+		};
+		usr_led0 {
+			label = "usr_led0";
+			gpios = <&pioC 14 GPIO_ACTIVE_HIGH>;
+			default-state = "on";
+		};
+	};
+
+	beeper {
+		compatible = "gpio-beeper";
+		gpios = <&pioC 24 GPIO_ACTIVE_HIGH>;
+		status = "okay";
+	};
+};
