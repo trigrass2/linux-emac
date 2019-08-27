@@ -380,7 +380,7 @@
 
 				};
 
-			codec: sgtl5000@0a {
+				codec: sgtl5000@0a {
 					#sound-dai-cells = <0>;
 					reg = <0x0a>;
 					compatible = "fsl,sgtl5000";
@@ -397,6 +397,12 @@
 				gpios = <&pioC 7 GPIO_ACTIVE_LOW>;
 				hw_algo = "toggle";
 				hw_margin_ms = <1000>;
+			};
+
+			reset_controller: rstc@fffffe00 {
+				compatible = "atmel,sama5d3-rstc";
+				reg = <0xfffffe00 0x10>;
+				clocks = <&clk32k>;
 			};
 		};
 
