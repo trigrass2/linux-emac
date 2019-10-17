@@ -315,16 +315,18 @@
 		  2 0 0x54000000 0x02000000
 		  3 0 0x56000000 0x02000000>;
 
-	porta@2,2 {
+	portc@2,6 {
 		compatible = "emac,mmio-gpio";
-		reg-names = "dat", "dirout";
-		reg = <2 2 1>, <2 3 1>;
+		reg-names = "dat";
+		reg = <2 6 1>;
 		gpio-controller;
+		no-input;
 		#address-cells = <1>;
 		#size-cells = <1>;
 		bank-width = <1>;
 		fsl,weim-cs-timing = <0x00040081 0x00000000 0x04000000
 				      0x00000000 0x04000040 0x00000000>;
+
 	};
 
 	portb@2,4 {
@@ -340,18 +342,18 @@
 
 	};
 
-	portc@2,6 {
+	porta@2,2 {
 		compatible = "emac,mmio-gpio";
-		reg-names = "dat";
-		reg = <2 6 1>;
+		reg-names = "dat", "dirout";
+		reg = <2 2 1>, <2 3 1>;
 		gpio-controller;
 		#address-cells = <1>;
 		#size-cells = <1>;
 		bank-width = <1>;
 		fsl,weim-cs-timing = <0x00040081 0x00000000 0x04000000
 				      0x00000000 0x04000040 0x00000000>;
-
 	};
+
 	lcd@2,0 {
 		compatible = "emac,lcd";
 		reg = <2 0 2>;
@@ -405,6 +407,7 @@
 		reg-names = "dat";
 		reg = <2 8 1>;
 		gpio-controller;
+		no-input;
 		#address-cells = <1>;
 		#size-cells = <1>;
 		bank-width = <1>;
