@@ -17,7 +17,7 @@ static ssize_t id_show(struct kobject *kobj, struct kobj_attribute *attr,
         return sprintf(buf, "%x\n", CPLD_VERSION);
 }
 
-static struct kobj_attribute id_attribute =__ATTR(cpld_id, 0440, id_show,  NULL);
+static struct kobj_attribute id_attribute =__ATTR(cpld_id, S_IRUGO, id_show,  NULL);
 
 static int emac_pld_probe(struct platform_device *pdev)
 {
@@ -88,7 +88,9 @@ static struct platform_driver emac_pld_device_driver = {
 	.driver		= {
 		.name	= "emac-pld-id",
 		.owner	= THIS_MODULE,
+#ifdef CONFIG_OF
 		.of_match_table = of_match_ptr(emac_pld_of_match),
+#endif
 	}
 };
 
