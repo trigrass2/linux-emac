@@ -221,6 +221,14 @@
 					rxd3-skew-ps = <400>;
 				};
 			};
+
+			watchdog: watchdog {
+				/* MAX6747 */
+				compatible = "linux,wdt-gpio";
+				gpios = <&pioD 6 GPIO_ACTIVE_LOW>;
+				hw_algo = "toggle";
+				hw_margin_ms = <1000>;
+			};
 		};
 
 		usb0: gadget@00500000 {
