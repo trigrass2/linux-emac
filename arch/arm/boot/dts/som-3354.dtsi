@@ -47,6 +47,18 @@
 		regulator-boot-on;
 	};
 
+	vmmc: fixedregulator@1 {
+		pinctrl-names = "default";
+		pinctrl-0 = <&vmmc_pins>;
+
+		compatible = "regulator-fixed";
+		regulator-name = "vmmc";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&gpio3 7 GPIO_ACTIVE_HIGH>;
+		regulator-boot-on;
+        };
+
 	backlight {
 		compatible = "pwm-backlight";
 		pwms = <&ecap2 0 50000 0>;
@@ -111,7 +123,8 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&gpmc_pins>;
 
-	ranges = <0x3 0 0x08000000 0x1000000>;    /* CS3: DUART */
+	ranges = <0x3 0 0x08000000 0x1000000    /* CS3: DUART */
+		  0x4 0 0x09000000 0x1000000>;	/* CS4: CPLD */
 
 	uart@3,0 {
 		compatible = "ns16550a";
@@ -438,7 +451,7 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&i2c0_pins>;
 
-	clock-frequency = <400000>;
+	clock-frequency = <100000>;
 
 	tps: tps@2d {
 		reg = <0x2d>;
@@ -499,9 +512,9 @@
 
 &mmc2 {
 	status = "okay";
-	vmmc-supply = <&vmain>;
+	vmmc-supply = <&vmmc>;
 	bus-width = <4>;
-	cd-gpios = <&gpio1 12 1>;
+	cd-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
 };
 
 &uart0 {
@@ -539,7 +552,7 @@
 	status = "okay";
 	pinctrl-names = "default";
 	pinctrl-0 = <&usbdrv0_pins>;
-	drv-gpios = <&gpio1 8 0>;
+	drv-gpios = <&gpio1 8 GPIO_ACTIVE_HIGH>;
 	dr_mode = "otg";
 };
 

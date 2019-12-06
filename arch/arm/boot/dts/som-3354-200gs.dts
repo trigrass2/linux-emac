@@ -1,5 +1,5 @@
 /*
- * som-3354-200gs.dts - Device Tree file for the SOM-3354M with SOM-200ES.
+ * som-3354-200gs.dts - Device Tree file for the SOM-3354M with SOM-200GS.
  *
  * Copyright (C) 2015 EMAC Inc.
  * Copyright (C) 2015 QWERTY Embedded Design
@@ -17,17 +17,7 @@
 	model = "EMAC SOM-3354M with SOM-200GS";
 
 	vmmc: fixedregulator@1 {
-		pinctrl-names = "default";
-		pinctrl-0 = <&vmmc_pins>;
-
-		compatible = "regulator-fixed";
-		regulator-name = "vmmc";
-		regulator-min-microvolt = <3300000>;
-		regulator-max-microvolt = <3300000>;
-		gpio = <&gpio3 7 GPIO_ACTIVE_HIGH
-			&gpio0 18 GPIO_ACTIVE_HIGH>;
 		enable-active-high;
-		regulator-boot-on;
         };
 
 	sound {
@@ -52,64 +42,17 @@
 			clocks = <&si5351 2>;
 		};
 	};
+
+	leds {
+		led@1 {
+			label = "carrier-led";
+			gpios = <&mcp23s08 7 GPIO_ACTIVE_LOW>;
+			default-state = "on";
+		};
+	};
 };
 
 &gpmc {
-	status = "okay";
-	pinctrl-names = "default";
-	pinctrl-0 = <&gpmc_pins>;
-
-	ranges = <0x3 0 0x08000000 0x1000000    /* CS3: DUART */
-		  0x4 0 0x09000000 0x1000000>;	/* CS4: CPLD */
-
-	uart@3,0 {
-		compatible = "ns16550a";
-		reg = <0x3 0x0 0x8>;
-		clock-frequency = <18432000>;
-		bank-width = <1>;
-		reg-shift = <0>;
-		reg-io-width = <1>;
-		fifo-size = <16>;
-		interrupt-parent = <&gpio3>;
-		interrupts = <9 1>;
-		gpmc,mux-add-data = <0>;
-		gpmc,device-width = <1>;
-		gpmc,wait-pin = <0>;
-		gpmc,cycle2cycle-samecsen = <1>;
-		gpmc,cycle2cycle-diffcsen = <1>;
-		gpmc,cs-on-ns = <18>;
-		gpmc,cs-rd-off-ns = <295>;
-		gpmc,cs-wr-off-ns = <295>;
-		gpmc,adv-on-ns = <73>;
-		gpmc,adv-rd-off-ns = <92>;
-		gpmc,adv-wr-off-ns = <110>;
-		gpmc,oe-on-ns = <110>;
-		gpmc,oe-off-ns = <295>;
-		gpmc,we-on-ns = <92>;
-		gpmc,we-off-ns = <295>;
-		gpmc,rd-cycle-ns = <300>;
-		gpmc,wr-cycle-ns = <300>;
-		gpmc,access-ns = <276>;
-		gpmc,page-burst-access-ns = <18>;
-		gpmc,bus-turnaround-ns = <20>;
-		gpmc,cycle2cycle-delay-ns = <20>;
-		gpmc,wr-access-ns = <276>;
-		status = "okay";
-	};
-
-	uart@3,8 {
-		compatible = "ns16550a";
-		reg = <0x3 0x8 0x8>;
-		interrupt-parent = <&gpio3>;
-		interrupts = <10 1>;
-		clock-frequency = <18432000>;
-		bank-width = <1>;
-		reg-shift = <0>;
-		reg-io-width = <1>;
-		fifo-size = <16>;
-		status = "okay";
-	};
-
 	portc: cpld@portc {
 		compatible = "emac,mmio-gpio";
 		reg-names = "dat";
@@ -191,13 +134,6 @@
 		#address-cells = <1>;
 		#size-cells = <1>;
 	};
-};
-
-&mmc2 {
-	status = "okay";
-	vmmc-supply = <&vmmc>;
-	bus-width = <4>;
-	cd-gpios = <&gpio1 12 1>;
 };
 
 &spi0 {
