@@ -17,18 +17,26 @@
 	model = "EMAC SOM-3354M SOM-200ES";
 
 	sound {
-		compatible = "emac,som3354-cs4271-snd";
-		ti,model = "SOM3354 CS4271";
-		ti,audio-codec = <&cs4271>;
-		ti,mcasp-controller = <&mcasp0>;
-		ti,codec-clock-rate = <12288000>;
-		clocks = <&si5351 2>;
-		clock-names = "mclk";
-		ti,audio-routing =
-			"Line Out",       "AOUTA+",
-			"Line Out",       "AOUTA-",
-			"Line Out",       "AOUTB+",
-			"Line Out",       "AOUTB-";
+		compatible = "simple-audio-card";
+		simple-audio-card,name = "cs4271 @ SOM3354";
+		simple-audio-card,format = "i2s";
+		simple-audio-card,bitclock-master = <&codec_master>;
+		simple-audio-card,frame-master = <&codec_master>;
+		simple-audio-card,widgets =
+			"Line", "Line In",
+			"Line", "Line Out";
+		simple-audio-card,routing =
+			"Line In", "Capture",
+			"Line Out", "Playback";
+
+		cpu_master: simple-audio-card,cpu {
+			sound-dai = <&mcasp0>;
+		};
+
+		codec_master: simple-audio-card,codec {
+			sound-dai = <&cs4271>;
+			clocks = <&si5351 2>;
+		};
 	};
 };
 
@@ -173,6 +181,7 @@
 
 &spi0 {
 	cs4271: cs4271@2 {
+		#sound-dai-cells = <0>;
 		compatible = "cirrus,cs4271";
 		spi-cpol;
 		spi-cpha;
