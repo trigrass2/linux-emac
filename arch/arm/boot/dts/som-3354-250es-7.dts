@@ -18,11 +18,6 @@
 	model = "EMAC SOM-3354M SOM-250ES-7";
 
 	leds {
-		pinctrl-names = "default";
-		pinctrl-0 = <&leds_pins>;
-
-		compatible = "gpio-leds";
-
 		led@1 {
 			label = "green-led";
 			gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
