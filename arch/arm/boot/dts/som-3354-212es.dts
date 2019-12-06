@@ -1,5 +1,5 @@
 /*
- * som-3354-200es.dts - Device Tree file for the SOM-3354M with SOM-200ES.
+ * som-3354-212es.dts - Device Tree file for the SOM-3354M with SOM-212ES.
  *
  * Copyright (C) 2015 EMAC Inc.
  * Copyright (C) 2015 QWERTY Embedded Design
@@ -36,6 +36,15 @@
 		codec_master: simple-audio-card,codec {
 			sound-dai = <&cs4271>;
 			clocks = <&si5351 2>;
+		};
+	};
+
+	leds {
+		led@1 {
+			label = "carrier-led";
+			gpios = <&mcp23s08 7 GPIO_ACTIVE_LOW>;
+			default-state = "on";
+			linux,default-trigger = "mmc1";
 		};
 	};
 };
