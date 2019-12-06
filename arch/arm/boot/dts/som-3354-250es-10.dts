@@ -10,65 +10,15 @@
  * published by the Free Software Foundation.
  */
 
-/dts-v1/;
-
-#include "som-3354.dtsi"
+#include "som-3354-250es-7.dts"
 
 / {
 	model = "EMAC SOM-3354M SOM-250ES-10";
 
-	leds {
-		pinctrl-names = "default";
-		pinctrl-0 = <&leds_pins>;
-
-		compatible = "gpio-leds";
-
-		led@1 {
-			label = "green-led";
-			gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
-			default-state = "on";
-		};
-
-		led@2 {
-			label = "red-led";
-			gpios = <&gpio1 9 GPIO_ACTIVE_HIGH>;
-			default-state = "on";
-		};
-	};
-
-	backlight {
-		compatible = "pwm-backlight";
-		pwms = <&ecap2 0 50000 1>;
-		brightness-levels = <0 51 53 56 62 75 101 152 255>;
-		default-brightness-level = <8>;
-	};
-
 	panel {
-		compatible = "ti,tilcdc,panel";
-		pinctrl-names = "default";
-		pinctrl-0 = <&lcd_pins>;
-		status = "okay";
-
-		enable-gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
-
-		panel-info {
-			ac-bias		= <255>;
-			ac-bias-intrpt	= <0>;
-			dma-burst-sz	= <16>;
-			bpp		= <16>;
-			fdd		= <0x80>;
-			tft-alt-mode	= <0>;
-			stn-565-mode	= <0>;
-			mono-8bit-mode	= <0>;
-			sync-edge	= <0>;
-			sync-ctrl	= <0>;
-			raster-order	= <1>;
-			fifo-th		= <0>;
-		};
-
 		display-timings {
-			native-mode = <&timing1>;
-			timing1: 1024x600 {
+			native-mode = <&timing2>;
+			timing2: 1024x600 {
 				hactive		= <1024>;
 				vactive		= <600>;
 				hback-porch     = <160>;
@@ -84,48 +34,5 @@
 				pixelclk-active = <1>;
 			};
 		};
-
-	};
-
-	sound {
-		compatible = "simple-audio-card";
-		simple-audio-card,name = "cs4271 @ SOM3354";
-		simple-audio-card,format = "i2s";
-		simple-audio-card,bitclock-master = <&codec_master>;
-		simple-audio-card,frame-master = <&codec_master>;
-		simple-audio-card,widgets =
-			"Line", "Line In",
-			"Line", "Line Out";
-		simple-audio-card,routing =
-			"Line In", "Capture",
-			"Line Out", "Playback";
-
-		cpu_master: simple-audio-card,cpu {
-			sound-dai = <&mcasp0>;
-		};
-
-		codec_master: simple-audio-card,codec {
-			sound-dai = <&cs4271>;
-			clocks = <&si5351 2>;
-		};
-	};
-};
-
-&spi0 {
-	cs4271: cs4271@2 {
-		#sound-dai-cells = <0>;
-		compatible = "cirrus,cs4271";
-		spi-cpol;
-		spi-cpha;
-		reg = <2>;
-		spi-max-frequency = <1000000>;
-		status = "okay";
-	};
-
-	spidev3: spidev@3 {
-		compatible = "emac,spidev";
-		reg = <3>;
-		spi-max-frequency = <40000000>;
-		status = "okay";
 	};
 };
