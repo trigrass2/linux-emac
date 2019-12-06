@@ -1,0 +1,108 @@
+/*
+ * som-9g45-250gs.dts - Device Tree file for the SOM-9G45 with the SOM-250GS.
+ *
+ *  Copyright (C) 2019 EMAC Inc
+ *
+ * Licensed under GPLv2 or later.
+ */
+/dts-v1/;
+#include "som-9g45.dtsi"
+
+/ {
+	model = "EMAC SOM-9G45M with SOM-250GS";
+
+	ahb {
+		apb {
+			usb2: gadget@fff78000 {
+				atmel,vbus-gpio = <&pioB 11 GPIO_ACTIVE_HIGH>;
+				status = "okay";
+			};
+
+			i2c0: i2c@fff84000 {
+				codec: sgtl5000@0a {
+					#sound-dai-cells = <0>;
+					compatible = "fsl,sgtl5000";
+					reg = <0x0a>;
+					VDDA-supply = <&reg_3p3v>;
+					VDDIO-supply = <&reg_3p3v>;
+					clocks = <&si5351 2>;
+				};
+
+				eeprom@50 {
+					compatible = "st,24c32";
+					reg = <0x50>;
+					pagesize = <32>;
+				};
+			};
+		};
+
+		fb0: fb@0x00500000 {
+			display0: display@0 {
+				atmel,power-control-gpio = <&pioE 1 GPIO_ACTIVE_HIGH
+					&pioB 31 GPIO_ACTIVE_HIGH>;
+
+				display-timings {
+					native-mode = <&timing0>;
+					timing0: timing0 {
+						clock-frequency = <32000000>;
+						hactive = <800>;
+						vactive = <480>;
+						hback-porch = <86>;
+						hfront-porch = <42>;
+						vback-porch = <33>;
+						vfront-porch = <10>;
+						hsync-len = <128>;
+						vsync-len = <2>;
+					};
+				};
+			};
+		};
+	};
+
+	sound {
+		compatible = "simple-audio-card";
+		simple-audio-card,format = "i2s";
+		simple-audio-card,name = "som-250gs sgtl5000";
+		simple-audio-card,bitclock-master = <&codec_master>;
+		simple-audio-card,frame-master = <&codec_master>;
+		simple-audio-card,widgets =
+			"Microphone", "Microphone Jack",
+			"Headphone", "Headphone Jack",
+			"Speaker", "Speaker Ext",
+			"Line", "Line In Jack";
+		simple-audio-card,routing =
+			"MIC_IN", "Microphone Jack",
+			"Microphone Jack", "Mic Bias",
+			"LINE_IN", "Line In Jack",
+			"Headphone Jack", "HP_OUT",
+			"Speaker Ext", "LINE_OUT";
+
+		cpu_master: simple-audio-card,cpu {
+			sound-dai = <&ssc0>;
+		};
+
+		codec_master: simple-audio-card,codec {
+			sound-dai = <&codec>;
+			clocks = <&si5351 2>;
+		};
+	};
+
+	gpio-leds {
+		red-led {
+			label = "red-led";
+			gpios = <&pioB 15 GPIO_ACTIVE_HIGH>;
+			default-state = "on";
+		};
+		green-led {
+			label = "green-led";
+			gpios = <&pioB 16 GPIO_ACTIVE_HIGH>;
+			default-state = "on";
+		};
+	};
+
+	beeper {
+		compatible = "gpio-beeper";
+		gpios = <&pioB 17 GPIO_ACTIVE_HIGH>;
+		status = "okay";
+	};
+};
