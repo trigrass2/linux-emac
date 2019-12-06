@@ -1,0 +1,60 @@
+/*
+ * som-9g45-212es.dts - Device Tree file for the SOM-9G45 with the SOM-212.
+ *
+ *  Copyright (C) 2014 EMAC Inc
+ *
+ * Licensed under GPLv2 or later.
+ */
+/dts-v1/;
+#include "som-9g45.dtsi"
+
+/ {
+	model = "EMAC SOM-9G45M with SOM-212ES";
+
+	ahb {
+		apb {
+			usb2: gadget@fff78000 {
+				atmel,vbus-gpio = <&pioB 11 GPIO_ACTIVE_HIGH>;
+				status = "okay";
+			};
+		};
+	};
+
+	sound {
+		compatible = "simple-audio-card";
+		simple-audio-card,name = "cs4271 @ SOM9G45";
+		simple-audio-card,format = "i2s";
+		simple-audio-card,bitclock-master = <&codec_master>;
+		simple-audio-card,frame-master = <&codec_master>;
+		simple-audio-card,widgets =
+			"Line", "Line In",
+			"Line", "Line Out";
+		simple-audio-card,routing =
+			"Line In", "Capture",
+			"Line Out", "Playback";
+
+		cpu_master: simple-audio-card,cpu {
+			sound-dai = <&ssc0>;
+		};
+
+		codec_master: simple-audio-card,codec {
+			sound-dai = <&cs4271>;
+			clocks = <&si5351 2>;
+		};
+	};
+
+	gpio-leds {
+		led2-carrier {
+			label = "carrier-led";
+			gpios = <&pioD 11 GPIO_ACTIVE_LOW>;
+			default-state = "on";
+			linux,default-trigger = "mmc1";
+		};
+	};
+
+	beeper {
+		compatible = "gpio-beeper";
+		gpios = <&pioB 17 GPIO_ACTIVE_HIGH>;
+		status = "okay";
+	};
+};

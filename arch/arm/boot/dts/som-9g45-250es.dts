@@ -1,0 +1,77 @@
+/*
+ * som-9g45-250es.dts - Device Tree file for the SOM-9G45 with the SOM-250ES.
+ *
+ *  Copyright (C) 2014 EMAC Inc
+ *
+ * Licensed under GPLv2 or later.
+ */
+/dts-v1/;
+#include "som-9g45.dtsi"
+
+/ {
+	model = "EMAC SOM-9G45M with SOM-250ES";
+
+	ahb {
+		apb {
+			usb2: gadget@fff78000 {
+				atmel,vbus-gpio = <&pioB 11 GPIO_ACTIVE_HIGH>;
+				status = "okay";
+			};
+		};
+
+		fb0: fb@0x00500000 {
+			display0: display@0 {
+				display-timings {
+					native-mode = <&timing0>;
+					timing0: timing0 {
+						clock-frequency = <32000000>;
+						hactive = <800>;
+						vactive = <480>;
+						hback-porch = <86>;
+						hfront-porch = <42>;
+						vback-porch = <33>;
+						vfront-porch = <10>;
+						hsync-len = <128>;
+						vsync-len = <2>;
+					};
+				};
+			};
+		};
+	};
+
+	sound {
+		compatible = "simple-audio-card";
+		simple-audio-card,name = "cs4271 @ SOM9G45";
+		simple-audio-card,format = "i2s";
+		simple-audio-card,bitclock-master = <&codec_master>;
+		simple-audio-card,frame-master = <&codec_master>;
+		simple-audio-card,widgets =
+			"Line", "Line In",
+			"Line", "Line Out";
+		simple-audio-card,routing =
+			"Line In", "Capture",
+			"Line Out", "Playback";
+
+		cpu_master: simple-audio-card,cpu {
+			sound-dai = <&ssc0>;
+		};
+
+		codec_master: simple-audio-card,codec {
+			sound-dai = <&cs4271>;
+			clocks = <&si5351 2>;
+		};
+	};
+
+	gpio-leds {
+		red-led {
+			label = "red-led";
+			gpios = <&pioB 15 GPIO_ACTIVE_HIGH>;
+			default-state = "on";
+		};
+		green-led {
+			label = "green-led";
+			gpios = <&pioB 16 GPIO_ACTIVE_HIGH>;
+			default-state = "on";
+		};
+	};
+};

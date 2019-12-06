@@ -1,0 +1,38 @@
+/*
+ * som-9g45-210es.dts - Device Tree file for the SOM-9G45 with the SOM-210.
+ *
+ *  Copyright (C) 2014 EMAC Inc
+ *
+ * Licensed under GPLv2 or later.
+ */
+/dts-v1/;
+#include "som-9g45.dtsi"
+
+/ {
+	model = "EMAC SOM-9G45M with SOM-210ES";
+
+	gpio-leds {
+		led2-carrier {
+			label = "carrier-led";
+			gpios = <&pioD 11 GPIO_ACTIVE_LOW>;
+			default-state = "on";
+			linux,default-trigger = "mmc1";
+		};
+	};
+
+	gpio-keys {
+		compatible = "gpio-keys";
+
+		pb2 {
+			label = "GPIO PB2";
+			linux,code = <103>;
+			gpios = <&pioB 14 GPIO_ACTIVE_LOW>;
+		};
+
+		pb3 {
+			label = "GPIO PB3";
+			linux,code = <108>;
+			gpios = <&pioB 15 GPIO_ACTIVE_LOW>;
+		};
+	};
+};

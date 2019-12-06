@@ -1,0 +1,202 @@
+/*
+ * som-9g45-200es.dts - Device Tree file for SOM-9G45 on the SOM-200ES.
+ *
+ *  Copyright (C) 2014 EMAC Inc
+ *
+ * Licensed under GPLv2 or later.
+ */
+/dts-v1/;
+#include "som-9g45.dtsi"
+
+/ {
+	model = "EMAC SOM-9G45M with SOM-200ES";
+
+	ahb {
+		apb {
+			mmc1: mmc@fffd0000 {
+				slot@0 {
+					cd-gpios = <&pioA 27 GPIO_ACTIVE_LOW>;
+					wp-gpios = <&pioD 14 GPIO_ACTIVE_LOW>;
+				};
+			};
+
+			pinctrl@fffff200 {
+				mmc1 {
+					pinctrl_board_mmc1: mmc1-board {
+						atmel,pins =
+							<AT91_PIOA 27 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP_DEGLITCH
+							 AT91_PIOD 14 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
+					};
+				};
+
+				smc05 {
+					pinctrl_smc: smc05-board {
+						atmel,pins =
+							<AT91_PIOC 10 AT91_PERIPH_A AT91_PINCTRL_PULL_UP
+							 AT91_PIOC 13 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+					};
+				};
+			};
+
+			usb2: gadget@fff78000 {
+				atmel,vbus-gpio = <&pioB 11 GPIO_ACTIVE_HIGH>;
+				status = "okay";
+			};
+
+			smc: smc@ffffe800 {
+				compatible = "atmel,at91sam9260-smc", "syscon";
+				reg = <0xffffe800 0x200>;
+			};
+
+			matrix: matrix@ffffea00 {
+				compatible = "atmel,at91sam9g45-matrix", "syscon";
+				reg = <0xffffea00 0x200>;
+			};
+		};
+
+		ebi: ebi@10000000 {
+			compatible = "atmel,at91sam9g45-ebi";
+			#address-cells = <2>;
+			#size-cells = <1>;
+			atmel,smc = <&smc>;
+			atmel,matrix = <&matrix>;
+			reg = <0x10000000 0x60000000>;
+			ranges = <0x0 0x0 0x10000000 0x10000000
+				  0x1 0x0 0x20000000 0x10000000
+				  0x2 0x0 0x30000000 0x10000000
+				  0x3 0x0 0x40000000 0x10000000
+				  0x4 0x0 0x50000000 0x10000000
+				  0x5 0x0 0x60000000 0x10000000>;
+			clocks = <&mck>;
+
+			pinctrl-names = "default";
+			pinctrl-0 = <&pinctrl_smc>;
+
+			portc@4,4 {
+				compatible = "emac,mmio-gpio";
+				reg-names = "dat";
+				reg = <4 4 1>;
+				gpio-controller;
+				no-input;
+				#address-cells = <1>;
+				#size-cells = <1>;
+				#gpio-cells = <1>;
+				bank-width = <1>;
+
+				atmel,smc-read-mode = "nrd";
+				atmel,smc-write-mode = "nwe";
+				atmel,smc-bus-width = <8>;
+				atmel,smc-ncs-rd-setup-ns = <8>;
+				atmel,smc-ncs-wr-setup-ns = <8>;
+				atmel,smc-nwe-setup-ns = <16>;
+				atmel,smc-nrd-setup-ns = <16>;
+				atmel,smc-ncs-rd-pulse-ns = <40>;
+				atmel,smc-ncs-wr-pulse-ns = <40>;
+				atmel,smc-nrd-pulse-ns = <24>;
+				atmel,smc-nwe-pulse-ns = <24>;
+				atmel,smc-nrd-cycle-ns = <64>;
+				atmel,smc-nwe-cycle-ns = <64>;
+				atmel,smc-tdf-ns = <16>;
+			};
+
+			portb@4,2 {
+				compatible = "emac,mmio-gpio";
+				reg-names = "dat", "dirout";
+				reg = <4 2 1>, <4 3 1>;
+				gpio-controller;
+				#address-cells = <1>;
+				#size-cells = <1>;
+				#gpio-cells = <1>;
+				bank-width = <1>;
+			};
+
+			porta@4,0 {
+				compatible = "emac,mmio-gpio";
+				reg-names = "dat", "dirout";
+				reg = <4 0 1>, <4 1 1>;
+				gpio-controller;
+				#address-cells = <1>;
+				#size-cells = <1>;
+				#gpio-cells = <1>;
+				bank-width = <1>;
+			};
+
+			comshdn@4,6 {
+				compatible = "emac,mmio-gpio";
+				reg-names = "dat";
+				reg = <4 6 1>;
+				gpio-controller;
+				no-input;
+				#address-cells = <1>;
+				#size-cells = <1>;
+				#gpio-cells = <1>;
+				bank-width = <1>;
+			};
+
+			handy@4,8 {
+				compatible = "emac,mmio-gpio";
+				reg-names = "dat", "dirout";
+				reg = <4 8 1>, <4 9 1>;
+				gpio-controller;
+				#address-cells = <1>;
+				#size-cells = <1>;
+				#gpio-cells = <1>;
+				bank-width = <1>;
+			};
+
+			id@4,7 {
+				compatible = "emac,emac-cpld-id";
+				reg = <4 7 1>;
+				#address-cells = <1>;
+				#size-cells = <1>;
+
+				atmel,smc-read-mode = "nrd";
+				atmel,smc-write-mode = "nwe";
+				atmel,smc-bus-width = <8>;
+				atmel,smc-ncs-rd-setup-ns = <8>;
+				atmel,smc-ncs-wr-setup-ns = <8>;
+				atmel,smc-nwe-setup-ns = <16>;
+				atmel,smc-nrd-setup-ns = <16>;
+				atmel,smc-ncs-rd-pulse-ns = <40>;
+				atmel,smc-ncs-wr-pulse-ns = <40>;
+				atmel,smc-nrd-pulse-ns = <24>;
+				atmel,smc-nwe-pulse-ns = <24>;
+				atmel,smc-nrd-cycle-ns = <64>;
+				atmel,smc-nwe-cycle-ns = <64>;
+				atmel,smc-tdf-ns = <16>;
+			};
+		};
+	};
+
+	sound {
+		compatible = "simple-audio-card";
+		simple-audio-card,name = "cs4271 @ SOM9G45";
+		simple-audio-card,format = "i2s";
+		simple-audio-card,bitclock-master = <&codec_master>;
+		simple-audio-card,frame-master = <&codec_master>;
+		simple-audio-card,widgets =
+			"Line", "Line In",
+			"Line", "Line Out";
+		simple-audio-card,routing =
+			"Line In", "Capture",
+			"Line Out", "Playback";
+
+		cpu_master: simple-audio-card,cpu {
+			sound-dai = <&ssc0>;
+		};
+
+		codec_master: simple-audio-card,codec {
+			sound-dai = <&cs4271>;
+			clocks = <&si5351 2>;
+		};
+	};
+
+	gpio-leds {
+		led2-carrier {
+			label = "carrier-led";
+			gpios = <&pioD 11 GPIO_ACTIVE_LOW>;
+			default-state = "on";
+			linux,default-trigger = "mmc1";
+		};
+	};
+};
