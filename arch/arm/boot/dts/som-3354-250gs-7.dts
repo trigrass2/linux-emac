@@ -50,21 +50,6 @@
 		default-brightness-level = <9>;
 	};
 
-	regulators {
-		compatible = "simple-bus";
-		#address-cells = <1>;
-		#size-cells = <0>;
-
-		reg_3p3v: regulator@0 {
-			compatible = "regulator-fixed";
-			reg = <0>;
-			regulator-name = "3P3V";
-			regulator-min-microvolt = <3300000>;
-			regulator-max-microvolt = <3300000>;
-			regulator-always-on;
-		};
-	};
-
 	panel {
 		compatible = "ti,tilcdc,panel";
 		pinctrl-names = "default";
@@ -143,8 +128,8 @@
 		#sound-dai-cells = <0>;
 		compatible = "fsl,sgtl5000";
 		reg = <0x0a>;
-		VDDA-supply = <&reg_3p3v>;
-		VDDIO-supply = <&reg_3p3v>;
+		VDDA-supply = <&vmain>;
+		VDDIO-supply = <&vmain>;
 		clocks = <&si5351 2>;
 	};
 
