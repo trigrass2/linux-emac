@@ -74,7 +74,8 @@ dtb-$(CONFIG_SOC_SAM_V7) += \
 	som-a5d35-112es.dtb \
 	som-a5d36-200gs.dtb \
 	som-a5d36-215gs.dtb \
-	som-a5d36-250gs.dtb
+	som-a5d36-250gs.dtb \
+	som-a536mp-215gs.dtb
 dtb-$(CONFIG_ARCH_ATLAS6) += \
 	atlas6-evb.dtb
 dtb-$(CONFIG_ARCH_ATLAS7) += \
