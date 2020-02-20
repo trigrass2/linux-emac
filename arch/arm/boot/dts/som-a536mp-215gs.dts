@@ -9,7 +9,7 @@
 #include "som-a5d36.dtsi"
 
 / {
-	model = "EMAC SOM-A5D36 with SOM-215GS";
+	model = "EMAC SOM-A536M/P with SOM-215GS";
 
 	ahb {
 		apb {
