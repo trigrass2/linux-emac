@@ -230,16 +230,16 @@
 			};
 		};
 
-		usb0: gadget@00500000 {
+		usb0: gadget@500000 {
 			status = "okay";
 		};
 
-		usb1: ohci@00600000 {
+		usb1: ohci@600000 {
 			num-ports = <3>;
 			status = "okay";
 		};
 
-		usb2: ehci@00700000 {
+		usb2: ehci@700000 {
 			status = "okay";
 		};
 	};

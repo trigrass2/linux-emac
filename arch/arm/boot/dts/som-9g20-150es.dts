@@ -307,7 +307,7 @@
 			status = "okay";
 		};
 
-		ebi: ebi@50000000 {
+		ebi: ebi@10000000 {
 			compatible = "atmel,at91sam9260-ebi";
 			#address-cells = <2>; 
 			#size-cells = <1>;

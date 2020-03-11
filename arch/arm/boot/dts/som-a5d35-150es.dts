@@ -245,29 +245,29 @@
 			dbgu: serial@ffffee00 {
 				status = "okay";
 			};
+
+			matrix: matrix@ffffec00 {
+				compatible = "atmel,sama5d3-matrix", "syscon";
+				reg = <0xffffec00 0x200>;
+			};
+
+			smc: smc@ffffc000 {
+				compatible = "atmel,sama5d3-smc", "syscon";
+				reg = <0xffffc000 0x1000>;
+			};
 		};
 
-		usb0: gadget@00500000 {
+		usb0: gadget@500000 {
 			status = "okay";
 		};
 
-		usb1: ohci@00600000 {
+		usb1: ohci@600000 {
 			num-ports = <3>;
 			status = "okay";
 		};
 
-		usb2: ehci@00700000 {
+		usb2: ehci@700000 {
 			status = "okay";
-		};
-
-		matrix: matrix@ffffec00 {
-			compatible = "atmel,sama5d3-matrix", "syscon";
-			reg = <0xffffec00 0x200>;
-		};
-
-		smc: smc@ffffc000 {
-			compatible = "atmel,sama5d3-smc", "syscon";
-			reg = <0xffffc000 0x1000>;
 		};
 
 		ebi: ebi@10000000 {
