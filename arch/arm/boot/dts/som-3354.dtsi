@@ -418,6 +418,15 @@
 		spi-max-frequency = <1000000>;
 		reg = <1>;
 		status = "okay";
+
+		pinctrl-names = "default";
+		pinctrl-0 = <&gpiopullups>;
+
+		gpiopullups: pinmux {
+			pins =	"gpio0", "gpio1", "gpio2", "gpio3",
+				"gpio4", "gpio5", "gpio6", "gpio7";
+			bias-pull-up;
+		};
 	};
 	flash: m25p80@0 {
 		compatible = "sst,n25q128a13";
