@@ -105,6 +105,7 @@
 
 	hsusb1_phy: hsusb1_phy {
 		compatible = "usb-nop-xceiv";
+		#phy-cells = <0>;
 		vcc-supply = <&reg_3p3v>;
 		reset-gpios = <&gpio2 25 GPIO_ACTIVE_LOW>;      /* gpio_57 */
        };
@@ -184,7 +185,7 @@
 	};
 };
 
-&can0 {
+&hecc {
 	status = "okay";
 };
 
