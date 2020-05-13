@@ -65,18 +65,29 @@
 	};
 
 	sound {
-		compatible = "fsl,imx-audio-aic32x4";
-		model = "tlv320aic32x4";
-		audio-codec = <&codec>;
-		ssi-controller = <&ssi1>;
-		audio-routing =
+		compatible = "simple-audio-card";
+		simple-audio-card,format = "i2s";
+		simple-audio-card,name = "tlv320aic32x4";
+		simple-audio-card,bitclock-master = <&codec_master>;
+		simple-audio-card,frame-master = <&codec_master>;
+		simple-audio-card,widgets =
+			"Microphone", "Microphone Jack",
+			"Headphone", "Headphone Jack";
+		simple-audio-card,routing =
 			"Headphone Jack", "HPL",
 			"Headphone Jack", "HPR",
-			"IN1_L", "Mic Jack",
-			"IN1_R", "Mic Jack",
-			"Mic Jack", "Mic Bias";
-		mux-ext-port = <4>;
-		mux-int-port = <1>;
+			"IN1_L", "Microphone Jack",
+			"IN1_R", "Microphone Jack",
+			"Microphone Jack", "Mic Bias";
+
+		cpu_master: simple-audio-card,cpu {
+			sound-dai = <&ssi1>;
+		};
+
+		codec_master: simple-audio-card,codec {
+			sound-dai = <&codec>;
+			clocks = <&tlv320_mclk>;
+		};
 	};
 
 	beeper: beeper {
