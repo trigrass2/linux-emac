@@ -112,7 +112,7 @@
 &iomuxc {
 	pinctrl-names = "default";
 
-	imx6qdl-tfc {
+	imx6qdl-som {
 		pinctrl_audmux: audmuxgrp {
 			fsl,pins = <
 				MX6QDL_PAD_DISP0_DAT23__AUD4_RXD	0x1b0b0

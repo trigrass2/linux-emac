@@ -16,7 +16,7 @@
 #include <dt-bindings/sound/fsl-imx-audmux.h>
 
 / {
-	model = "EMAC SOM-iMX6 Quad with SOM-350ES";
+	model = "EMAC SOM-iMX6 with SOM-350ES";
 	compatible = "emac,som-imx6q-350es", "fsl,imx6q";
 
 	chosen {
@@ -65,18 +65,29 @@
 	};
 
 	sound {
-		compatible = "fsl,imx-audio-aic32x4";
-		model = "tlv320aic32x4";
-		audio-codec = <&codec>;
-		ssi-controller = <&ssi1>;
-		audio-routing =
+		compatible = "simple-audio-card";
+		simple-audio-card,format = "i2s";
+		simple-audio-card,name = "tlv320aic32x4";
+		simple-audio-card,bitclock-master = <&codec_master>;
+		simple-audio-card,frame-master = <&codec_master>;
+		simple-audio-card,widgets =
+			"Microphone", "Microphone Jack",
+			"Headphone", "Headphone Jack";
+		simple-audio-card,routing =
 			"Headphone Jack", "HPL",
 			"Headphone Jack", "HPR",
-			"IN1_L", "Mic Jack",
-			"IN1_R", "Mic Jack",
-			"Mic Jack", "Mic Bias";
-		mux-ext-port = <4>;
-		mux-int-port = <1>;
+			"IN1_L", "Microphone Jack",
+			"IN1_R", "Microphone Jack",
+			"Microphone Jack", "Mic Bias";
+
+		cpu_master: simple-audio-card,cpu {
+			sound-dai = <&ssi1>;
+		};
+
+		codec_master: simple-audio-card,codec {
+			sound-dai = <&codec>;
+			clocks = <&tlv320_mclk>;
+		};
 	};
 
 	beeper: beeper {
@@ -108,6 +119,26 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_audmux>;
 	status = "okay";
+
+	ssi1 {
+		fsl,audmux-port = <0>;
+		fsl,port-config = <
+			(IMX_AUDMUX_V2_PTCR_SYN |
+			IMX_AUDMUX_V2_PTCR_TFSEL(3) |
+			IMX_AUDMUX_V2_PTCR_TCSEL(3) |
+			IMX_AUDMUX_V2_PTCR_TFSDIR |
+			IMX_AUDMUX_V2_PTCR_TCLKDIR)
+			IMX_AUDMUX_V2_PDCR_RXDSEL(3)
+		>;
+	};
+
+	pins5 {
+		fsl,audmux-port = <3>;
+		fsl,port-config = <
+			IMX_AUDMUX_V2_PTCR_SYN
+			IMX_AUDMUX_V2_PDCR_RXDSEL(0)
+		>;
+	};
 };
 
 &ldb {
@@ -139,8 +170,8 @@
 
 &i2c2 {
 	codec: tlv320aic32x4@18{
-		compatible = "ti,tlv320aic32x4";
 		#sound-dai-cells = <0>;
+		compatible = "ti,tlv320aic32x4";
 		reg = <0x18>;
 		clocks = <&tlv320_mclk>;
 		clock-names = "mclk";
