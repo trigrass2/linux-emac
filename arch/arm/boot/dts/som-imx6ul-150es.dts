@@ -308,8 +308,10 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_usdhc2>;
 	no-1-8-v;
+	cd-gpios = <&gpio4 11 GPIO_ACTIVE_LOW>;
 	keep-power-in-suspend;
 	wakeup-source;
+	vmmc-supply = <&reg_sd1_vmmc>;
 	status = "okay";
 };
 
