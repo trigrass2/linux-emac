@@ -92,6 +92,20 @@
 		};
 	};
 
+	soc {
+		aips2: aips-bus@2100000 {
+			weim: weim@021b8000 {
+				#address-cells = <2>;
+				#size-cells = <1>;
+				compatible = "fsl,imx6sx-weim", "fsl,imx6q-weim";
+				reg = <0x021b8000 0x4000>;
+				interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
+				clocks = <&clks IMX6UL_CLK_EIM>;
+				fsl,weim-cs-gpr = <&gpr>;
+				status = "disabled";
+			};
+		};
+	};
 	/* for whatever reason this pwm clock has to be a the top level
 	   not in clocks section above or it won't be seen */
 	cpld_clk: cpld_clk {
