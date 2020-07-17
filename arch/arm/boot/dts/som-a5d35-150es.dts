@@ -164,22 +164,30 @@
 			};
 
 			usart0: serial@f001c000 {
+				atmel,use-dma-tx;
+				atmel,use-dma-rx;
 				status = "okay";
 			};
 
 			usart1: serial@f0020000 {
 				pinctrl-names = "default";
 				pinctrl-0 = <&pinctrl_usart1 &pinctrl_usart1_rts_cts>;
+				atmel,use-dma-tx;
+				atmel,use-dma-rx;
 				status = "okay";
 			};
 
 			usart2: serial@f8020000 {
 				pinctrl-names = "default";
 				pinctrl-0 = <&pinctrl_usart2 &pinctrl_usart2_rts_cts>;
+				atmel,use-dma-tx;
+				atmel,use-dma-rx;
 				status = "okay";
 			};
 
 			usart3: serial@f8024000 {
+				atmel,use-dma-tx;
+				atmel,use-dma-rx;
 				status = "okay";
 			};
 
