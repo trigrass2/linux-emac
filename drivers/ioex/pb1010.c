@@ -11,7 +11,6 @@
 #include <linux/kernel.h>
 #include <linux/ioport.h>
 #include <linux/device.h>
-#include <linux/ioex/pb1010.h>
 #include <linux/platform_device.h>
 #include <linux/class/gpio.h>
 #include <linux/class/pwm.h>
@@ -85,35 +84,44 @@ return 0;
 /************************************************************
  * map fpga core into virtual memory and declare device classes
  */
-static inline void map_core(unsigned long phys_addr, unsigned long size, int key_offset,const char *name,int flags)
+static inline void map_core(unsigned long phys_addr, unsigned long size,const char *name,int flags)
 {	
 	u8 *virt_addr = ioremap_nocache(phys_addr,size);
 	//int version;
 	
-	if(virt_addr==NULL)printk("could not remap physical memory at %lx for pb1010 core\n",phys_addr);
-	else{
-		//version =ioread8(&virt_addr[key_offset]);//key currently not implemented.
-		//printk("EMAC core version %x detected at %lx\n",version,phys_addr+key_offset );
+	if(virt_addr==NULL)
+		printk("could not remap physical memory at %lx for pb1010 core\n",phys_addr);
+	else
 		generic_map(phys_addr,virt_addr,size,name,flags);
-		}
+
 }
 
 static int pb1010_probe(struct platform_device *pdev){
-	struct pb1010_data *data;
 	struct resource *r;
-	int i;
+	struct device *dev = &pdev->dev;
+	struct device_node *np = dev->of_node;
+	u32 tmp;
+	int ret;
+	const char *name = 0;
 
-	printk("pb1010_probe\n");	
-	if (pdev == NULL)return -ENODEV;
-	data = pdev->dev.platform_data;
-	
-	printk("num resources = %d\n",pdev->num_resources);
-		
-	for(i=0;i<pdev->num_resources;i++){
-	r = &pdev->resource[i];
-	map_core(r->start,(r->end-r->start+1),data->key_offset,r->name,r->flags);
-	//return 0;
+	ret = of_property_read_u32(np, "atmel,smc-bus-width", &tmp);
+	if (!ret) {
+		if(tmp==16) {
+			pdev->resource[0].flags |= IORESOURCE_MEM_16BIT;
+		}
 	}
+
+	ret = of_property_read_string(np, "cs-name", &name);
+	if (!ret) {
+		pdev->resource[0].name = name;
+	}
+
+	printk("pb1010_probe %s\n", pdev->resource[0].name);
+	if (pdev == NULL)
+		return -ENODEV;
+
+	r = &pdev->resource[0];
+	map_core(r->start,(r->end-r->start+1),r->name,r->flags);
 	return 0;
 }
 
