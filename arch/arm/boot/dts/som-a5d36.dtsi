@@ -81,17 +81,6 @@
 			regulator-boot-on;
 			regulator-always-on;
 		};
-
-		lvds_3p3v: lvds_3p3v_reg {
-			compatible = "regulator-fixed";
-			reg = <3>;
-			regulator-name = "LVDS 3P3V";
-			regulator-min-microvolt = <3300000>;
-			regulator-max-microvolt = <3300000>;
-			regulator-boot-on;
-			enable-active-high;
-			gpio = <&pioC 25 GPIO_ACTIVE_LOW>;
-		};
 	};
 
 	ahb {
