@@ -383,19 +383,19 @@
 
 &mac {
 	status = "okay";
+	slaves = <1>;
 };
 
 &davinci_mdio {
 	status = "okay";
+
+	ethphy0: ethernet-phy@0 {
+		reg = <0>;
+	};
 };
 
 &cpsw_emac0 {
-	phy_id = <&davinci_mdio>, <1>;
-	phy-mode = "rmii";
-};
-
-&cpsw_emac1 {
-	phy_id = <&davinci_mdio>, <2>;
+	phy-handle = <&ethphy0>;
 	phy-mode = "rmii";
 };
 
@@ -441,8 +441,8 @@
 			bias-pull-up;
 		};
 	};
-	flash: m25p80@0 {
-		compatible = "sst,n25q128a13";
+	flash: n25q128a13@0 {
+		compatible = "jedec,spi-nor";
 		spi-max-frequency = <40000000>;
 		reg = <0>;
 		status = "okay";
