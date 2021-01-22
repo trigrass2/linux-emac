@@ -55,7 +55,7 @@
 		regulator-name = "vmmc";
 		regulator-min-microvolt = <3300000>;
 		regulator-max-microvolt = <3300000>;
-		gpio = <&gpio3 7 GPIO_ACTIVE_HIGH>;
+		gpio = <&gpio3 7 GPIO_ACTIVE_LOW>;
 		regulator-boot-on;
         };
 
@@ -340,6 +340,52 @@
 		>;
 	};
 
+	cpsw_default: cpsw_default {
+		pinctrl-single,pins = <
+			/* Slave 1 */
+			AM33XX_IOPAD(0x90c, PIN_INPUT_PULLDOWN | MUX_MODE1)       /* mii1_crs.rmii1_crs_dv */
+			AM33XX_IOPAD(0x910, PIN_INPUT_PULLUP | MUX_MODE1)	     /* mii1_rxerr.mii1_rxerr */
+			AM33XX_IOPAD(0x914, PIN_OUTPUT_PULLDOWN | MUX_MODE1)      /* mii1_tx_en.rmii1_txen */
+			AM33XX_IOPAD(0x924, PIN_OUTPUT_PULLDOWN | MUX_MODE1)      /* mii1_txd1.rmii1_txd1 */
+			AM33XX_IOPAD(0x928, PIN_OUTPUT_PULLDOWN | MUX_MODE1)      /* mii1_txd0.rmii1_txd0 */
+			AM33XX_IOPAD(0x93c, PIN_INPUT_PULLDOWN | MUX_MODE1)       /* mii1_rxd1.rmii1_rxd1 */
+			AM33XX_IOPAD(0x940, PIN_INPUT_PULLDOWN | MUX_MODE1)       /* mii1_rxd0.rmii1_rxd0 */
+			AM33XX_IOPAD(0x944, PIN_INPUT_PULLDOWN | MUX_MODE0)       /* rmii1_ref_clk.rmii1_refclk */
+			AM33XX_IOPAD(0x934, PIN_INPUT_PULLUP | MUX_MODE7)	     /* mii1_rxd3.gpio2_18 ETH_INT*/
+			AM33XX_IOPAD(0x938, PIN_OUTPUT_PULLUP | MUX_MODE7)	     /* mii1_rxd2.gpio2_19 ETH_EN*/
+		>;
+	};
+
+	davinci_mdio_default: davinci_mdio_default {
+		pinctrl-single,pins = <
+			/* MDIO */
+			AM33XX_IOPAD(0x948, PIN_INPUT_PULLUP | SLEWCTRL_FAST | MUX_MODE0)	/* mdio_data.mdio_data */
+			AM33XX_IOPAD(0x94c, PIN_OUTPUT_PULLUP | MUX_MODE0)			/* mdio_clk.mdio_clk */
+		>;
+	};
+
+	mmc0_pins: pinmux-mmc0-pins {
+		pinctrl-single,pins = <
+			AM33XX_IOPAD(0x8fc, PIN_INPUT_PULLUP | MUX_MODE0)	/* (G16) mmc0_dat0.mmc0_dat0 */
+			AM33XX_IOPAD(0x8f8, PIN_INPUT_PULLUP | MUX_MODE0)	/* (G15) mmc0_dat1.mmc0_dat1 */
+			AM33XX_IOPAD(0x8f4, PIN_INPUT_PULLUP | MUX_MODE0)	/* (F18) mmc0_dat2.mmc0_dat2 */
+			AM33XX_IOPAD(0x8f0, PIN_INPUT_PULLUP | MUX_MODE0)	/* (F17) mmc0_dat3.mmc0_dat3 */
+			AM33XX_IOPAD(0x904, PIN_INPUT_PULLUP | MUX_MODE0)	/* (G18) mmc0_cmd.mmc0_cmd */
+			AM33XX_IOPAD(0x900, PIN_INPUT_PULLUP | MUX_MODE0)	/* (G17) mmc0_clk.mmc0_clk */
+		>;
+	};
+
+	mmc1_pins: mmc1_pins {
+		pinctrl-single,pins = <
+			AM33XX_IOPAD(0x820, PIN_INPUT_PULLUP | MUX_MODE2)	/* gpmc_ad8.mmc1_dat0 */
+			AM33XX_IOPAD(0x824, PIN_INPUT_PULLUP | MUX_MODE2)	/* gpmc_ad9.mmc1_dat1 */
+			AM33XX_IOPAD(0x828, PIN_INPUT_PULLUP | MUX_MODE2)	/* gpmc_ad10.mmc1_dat2 */
+			AM33XX_IOPAD(0x82c, PIN_INPUT_PULLUP | MUX_MODE2)	/* gpmc_ad11.mmc1_dat3 */
+			AM33XX_IOPAD(0x880, PIN_INPUT_PULLUP | MUX_MODE2) /* gpmc_csn1.mmc1_clk */
+			AM33XX_IOPAD(0x884, PIN_INPUT_PULLUP | MUX_MODE2) /* gpmc_csn2.mmc1_cmd */
+			AM33XX_IOPAD(0x830, PIN_INPUT_PULLUP | MUX_MODE7)	/* gpmc_ad12.gpio1_12 */
+		>;
+	};
 };
 
 &lcdc {
@@ -383,11 +429,15 @@
 
 &mac {
 	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&cpsw_default>;
 	slaves = <1>;
 };
 
 &davinci_mdio {
 	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&davinci_mdio_default>;
 
 	ethphy0: ethernet-phy@0 {
 		reg = <0>;
@@ -515,6 +565,8 @@
 
 &mmc1 {
 	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&mmc0_pins>;
 	vmmc-supply = <&vmain>;
 	bus-width = <4>;
 	ti,non-removable;
@@ -522,6 +574,8 @@
 
 &mmc2 {
 	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&mmc1_pins>;
 	vmmc-supply = <&vmmc>;
 	bus-width = <4>;
 	cd-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
