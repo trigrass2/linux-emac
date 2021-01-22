@@ -47,7 +47,6 @@
 		led@1 {
 			label = "carrier-led";
 			gpios = <&mcp23s08 7 GPIO_ACTIVE_LOW>;
-			default-state = "on";
 			linux,default-trigger = "mmc1";
 		};
 	};
@@ -58,11 +57,8 @@
 		compatible = "emac,mmio-gpio";
 		reg-names = "dat";
 		reg = <0x4 0x4 0x1>;
-		bank-width = <1>;
-		gpio-controller;
 		no-input;
-		#gpio-cells = <1>;
-		status = "okay";
+		#gpio-cells = <2>;
 
 		gpmc,mux-add-data = <0>;
 		gpmc,device-width = <1>;
@@ -91,49 +87,35 @@
 	portb: cpld@portb {
 		compatible = "emac,mmio-gpio";
 		reg-names = "dat", "dirout";
-		reg = <0x4 0x2 0x1>;
-		bank-width = <1>;
-		gpio-controller;
-		#gpio-cells = <1>;
-		status = "okay";
+		reg = <0x4 0x2 0x1>, <0x4 0x3 0x1>;
+		#gpio-cells = <2>;
 	};
 
 	porta: cpld@porta {
 		compatible = "emac,mmio-gpio";
 		reg-names = "dat", "dirout";
-		reg = <0x4 0x0 0x1>;
-		bank-width = <1>;
-		gpio-controller;
-		#gpio-cells = <1>;
-		status = "okay";
+		reg = <0x4 0x0 0x1>, <0x4 0x1 0x1>;
+		#gpio-cells = <2>;
 	};
 
 	control: cpld@comshtdn {
 		compatible = "emac,mmio-gpio";
 		reg-names = "dat";
 		reg = <0x4 0x6 0x1>;
-		bank-width = <1>;
-		gpio-controller;
 		no-input;
-		#gpio-cells = <1>;
-		status = "okay";
+		#gpio-cells = <2>;
 	};
 
 	gpio: cpld@handy {
 		compatible = "emac,mmio-gpio";
 		reg-names = "dat", "dirout";
-		reg = <0x4 0x8 0x1>;
-		bank-width = <1>;
-		gpio-controller;
-		#gpio-cells = <1>;
-		status = "okay";
+		reg = <0x4 0x8 0x1>, <0x4 0x9 0x1>;
+		#gpio-cells = <2>;
 	};
 
 	id: cpld@id {
 		compatible = "emac,emac-cpld-id";
 		reg = <0x4 0x7 0x1>;
-		#address-cells = <1>;
-		#size-cells = <1>;
 	};
 };
 
