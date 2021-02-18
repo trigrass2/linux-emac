@@ -42,16 +42,17 @@
 
 	regulators {
 		wlan_en_reg: regulator@3 {
-		        compatible = "regulator-fixed";
-		        reg = <3>;
-		        regulator-name = "wlan-en-regulator";
-		        regulator-min-microvolt = <1800000>;
-		        regulator-max-microvolt = <1800000>;
-		        gpio = <&gpio5 5 0>;
+			compatible = "regulator-fixed";
+			reg = <3>;
+			regulator-name = "wlan-en-regulator";
+			regulator-min-microvolt = <1800000>;
+			regulator-max-microvolt = <1800000>;
+			gpio = <&gpio5 5 0>;
 
-		        startup-delay-us = <70000>;
-		        enable-active-high;
+			startup-delay-us = <70000>;
+			enable-active-high;
 		};
+
 		lvds_3p3v: lvds_3p3v_reg {
 			compatible = "regulator-fixed";
 			reg = <4>;
@@ -96,10 +97,11 @@
 	};
 
 	backlight: backlight {
-		compatible = "gpio-backlight";
-		gpios = <&gpio5 7 GPIO_ACTIVE_HIGH>;
-		default-on;
-		status = "okay";
+		compatible = "pwm-backlight";
+		pwms = <&pwm1 0 50000 0>;
+		enable-gpios = <&gpio5 7 GPIO_ACTIVE_HIGH>;
+		brightness-levels = <0 10 20 30 40 50 60 70 80 90 100>;
+		default-brightness-level = <9>;
 	};
 
 	panel {
@@ -271,28 +273,27 @@
 	pinctrl-0 = <&pinctrl_usdhc2>;
 	vmmc-supply = <&reg_3p3v>;
 	cd-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
+	disable-wp;
 	status = "okay";
 };
-
 
 &usdhc4 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_usdhc4 &pinctrl_wifi>;
 	status = "okay";
 	vmmc-supply = <&wlan_en_reg>;
-        cap-power-off-card;
-        keep-power-in-suspend;
+	cap-power-off-card;
+	keep-power-in-suspend;
 	enable-sdio-wakeup;
-	no-1-8-v;
 	non-removable;
 
-        #address-cells = <1>;
-        #size-cells = <0>;
-        wlcore: wlcore@0 {
-                compatible = "ti,wl1835";
-                reg = <0x2>;
-		interrupt-parent = <&gpio6>;
-		interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
+	#address-cells = <1>;
+	#size-cells = <0>;
+	wlcore: wlcore@0 {
+			compatible = "ti,wl1835";
+			reg = <0x2>;
+			interrupt-parent = <&gpio6>;
+			interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
 	};
 };
 
