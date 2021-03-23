@@ -63,6 +63,16 @@
 			enable-active-high;
 			gpio = <&gpio1 29 GPIO_ACTIVE_HIGH>;
 		};
+
+		bl_pwr: bl_pwr_reg {
+			compatible = "regulator-fixed";
+			reg = <5>;
+			regulator-name = "LVDS ABL";
+			regulator-min-microvolt = <3300000>;
+			regulator-max-microvolt = <3300000>;
+			regulator-boot-on;
+			gpio = <&gpio1 30 GPIO_ACTIVE_LOW>;
+		};
 	};
 
 	sound {
@@ -100,6 +110,7 @@
 		compatible = "pwm-backlight";
 		pwms = <&pwm1 0 50000 0>;
 		enable-gpios = <&gpio5 7 GPIO_ACTIVE_HIGH>;
+		power-supply = <&bl_pwr>;
 		brightness-levels = <0 10 20 30 40 50 60 70 80 90 100>;
 		default-brightness-level = <9>;
 	};
