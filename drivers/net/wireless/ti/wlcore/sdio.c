@@ -136,8 +136,12 @@ static int __must_check wl12xx_sdio_raw_write(struct device *child, int addr,
 
 		if (fixed)
 			ret = sdio_writesb(func, addr, buf, len);
-		else
+		else {
 			ret = sdio_memcpy_toio(func, addr, buf, len);
+			/* Hack to work around cold boot failure */
+			if (ret)
+				ret = sdio_memcpy_toio(func, addr, buf, len);
+		}
 	}
 
 	sdio_release_host(func);
