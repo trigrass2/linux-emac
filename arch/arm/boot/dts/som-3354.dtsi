@@ -57,7 +57,7 @@
 		regulator-max-microvolt = <3300000>;
 		gpio = <&gpio3 7 GPIO_ACTIVE_LOW>;
 		regulator-boot-on;
-        };
+	};
 
 	backlight {
 		compatible = "pwm-backlight";
@@ -258,7 +258,7 @@
 
 	vmmc_pins: pinmux_vmmc_pins {
 		pinctrl-single,pins = <
-			AM33XX_IOPAD(0x9e4, PIN_OUTPUT | MUX_MODE7)		/* emu0.gpio3_7 */
+			AM33XX_IOPAD(0x9e4, PIN_INPUT_PULLUP | MUX_MODE7)		/* emu0.gpio3_7 */
 		>;
 	};
 
@@ -300,8 +300,8 @@
 			AM33XX_IOPAD(0x930, PIN_INPUT_PULLDOWN | MUX_MODE7)	/* mii1_rxclk.gpio3_10 */
 			AM33XX_IOPAD(0x890, PIN_INPUT_PULLDOWN | MUX_MODE7)	/* gpmc_advn_ale.gpio2_2 */
 			AM33XX_IOPAD(0x9b4, PIN_INPUT_PULLDOWN | MUX_MODE7)	/* xdma_event_intr1.gpio0_20 */
-			AM33XX_IOPAD(0x96c, PIN_INPUT_PULLDOWN | MUX_MODE7)	/* uart0_rtsn.gpio1_9 */
-			AM33XX_IOPAD(0x964, PIN_INPUT_PULLDOWN | MUX_MODE7)	/* eCAP0_in_PWM0_out.gpio0_7 */
+			AM33XX_IOPAD(0x96c, PIN_INPUT_PULLUP | MUX_MODE7)	/* uart0_rtsn.gpio1_9 */
+			AM33XX_IOPAD(0x964, PIN_INPUT_PULLUP | MUX_MODE7)	/* eCAP0_in_PWM0_out.gpio0_7 */
 		>;
 	};
 
@@ -335,8 +335,8 @@
 
 	usbdrv0_pins: usbdrv0_pins {
 		pinctrl-single,pins = <
-			AM33XX_IOPAD(0x968, PIN_OUTPUT | MUX_MODE7) /* uart0_ctsn.gpio1_8 */
-			AM33XX_IOPAD(0xa1c, PIN_OUTPUT | MUX_MODE7)      /* usb0_drvvbus.gpio0_18 */
+			AM33XX_IOPAD(0x968, PIN_INPUT_PULLUP | MUX_MODE7) /* uart0_ctsn.gpio1_8 */
+			AM33XX_IOPAD(0xa1c, PIN_INPUT_PULLUP | MUX_MODE7)      /* usb0_drvvbus.gpio0_18 */
 		>;
 	};
 
