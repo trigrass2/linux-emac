@@ -17,6 +17,10 @@
 / {
 	model = "EMAC SOM-3354M SOM-250GS-7";
 
+	vmmc: fixedregulator@1 {
+		/delete-property/ gpio;
+	};
+
 	beeper {
 		compatible = "gpio-beeper";
 		gpios = <&gpio2 2 GPIO_ACTIVE_HIGH>;
