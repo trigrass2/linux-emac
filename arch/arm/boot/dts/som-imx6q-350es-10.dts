@@ -1,0 +1,28 @@
+/*
+ * Copyright 2016 EMAC Inc.
+ * Copyright 2016 QWERTY Embedded Design
+ *
+ * Author: Michael Welling <mwelling@ieee.org>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ *
+ */
+
+#include "som-imx6q-350es.dts"
+
+/ {
+	model = "EMAC SOM-iMX6 Quad with 10 inch SOM-350ES";
+
+	backlight: backlight {
+		compatible = "gpio-backlight";
+		gpios = <&gpio1 30 GPIO_ACTIVE_HIGH>;
+		default-on;
+		status = "okay";
+	};
+
+	panel {
+		compatible = "auo,b101aw03", "simple-panel";
+	};
+};
