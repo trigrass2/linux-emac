@@ -191,7 +191,7 @@
 
 		pinctrl_pcie: pciegrp {
 			fsl,pins = <
-				MX6QDL_PAD_NANDF_D1__GPIO2_IO01		0x1b0b0
+				MX6QDL_PAD_NANDF_D7__GPIO2_IO07		0x1b0b0
 			>;
 		};
 
@@ -397,7 +397,6 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_pcie>;
 	reset-gpio = <&gpio2 7 0>;
-	status = "okay";
 };
 
 &ssi1 {
