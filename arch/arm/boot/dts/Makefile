@@ -47,7 +47,8 @@ dtb-$(CONFIG_SOC_AT91SAM9) += \
 	at91sam9g25ek.dtb \
 	at91sam9g35ek.dtb \
 	at91sam9x25ek.dtb \
-	at91sam9x35ek.dtb
+	at91sam9x35ek.dtb \
+	ipac-9x25.dtb
 dtb-$(CONFIG_SOC_SAM9X60) += \
 	at91-sam9x60ek.dtb
 dtb-$(CONFIG_SOC_SAM_V7) += \
