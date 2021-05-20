@@ -162,12 +162,12 @@ static const struct of_device_id at91_reset_of_match[] = {
 	{
 		.compatible = "atmel,at91sam9g45-rstc",
 		.data = (void *)(AT91_RSTC_KEY | AT91_RSTC_PERRST |
-				 AT91_RSTC_PROCRST)
+				 AT91_RSTC_PROCRST | AT91_RSTC_EXTRST)
 	},
 	{
 		.compatible = "atmel,sama5d3-rstc",
 		.data = (void *)(AT91_RSTC_KEY | AT91_RSTC_PERRST |
-				 AT91_RSTC_PROCRST)
+				 AT91_RSTC_PROCRST | AT91_RSTC_EXTRST)
 	},
 	{
 		.compatible = "atmel,samx7-rstc",
