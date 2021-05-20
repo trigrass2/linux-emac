@@ -214,10 +214,10 @@
 			};
 
 			spi0: spi@f0000000 {
-				cs-gpios = <&pioC 16 0
-					    &pioC 17 0
-					    &pioC 12 0
-					    &pioA 14 0>;
+				cs-gpios = <&pioC 16 GPIO_ACTIVE_LOW
+					    &pioC 17 GPIO_ACTIVE_LOW
+					    &pioC 12 GPIO_ACTIVE_LOW
+					    &pioA 14 GPIO_ACTIVE_LOW>;
 				pinctrl-0 = <&pinctrl_spi0 &pinctrl_spi0_cs>;
 				status = "okay";
 
@@ -260,7 +260,7 @@
 			};
 
 			spi1: spi@f0004000 {
-				cs-gpios = <&pioA 31 0>;
+				cs-gpios = <&pioA 31 GPIO_ACTIVE_LOW>;
 				pinctrl-0 = <&pinctrl_spi1 &pinctrl_spi1_cs>;
 				status = "okay";
 
@@ -292,6 +292,7 @@
 			smc: smc@ffffea00 {
 				compatible = "atmel,at91sam9x5-smc", "syscon";
 				reg = <0xffffea00 0x200>;
+			};
 
 			reset_controller: rstc@fffffe00 {
 				compatible = "atmel,sama5d3-rstc";

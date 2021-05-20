@@ -19,7 +19,7 @@
 			};
 		};
 
-		fb0: fb@0x00500000 {
+		fb0: fb@500000 {
 			display0: display@0 {
 				display-timings {
 					native-mode = <&timing0>;
