@@ -16,6 +16,18 @@
 / {
 	model = "EMAC SOM-3354M SOM-210ES";
 
+	vmmc: fixedregulator@1 {
+		pinctrl-names = "default";
+		pinctrl-0 = <&vmmc_pins>;
+
+		compatible = "regulator-fixed";
+		regulator-name = "vmmc";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&gpio3 7 GPIO_ACTIVE_LOW>;
+		regulator-boot-on;
+	};
+
 	leds {
 		led@1 {
 			label = "carrier-led";

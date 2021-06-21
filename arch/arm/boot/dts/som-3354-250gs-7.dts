@@ -18,7 +18,14 @@
 	model = "EMAC SOM-3354M SOM-250GS-7";
 
 	vmmc: fixedregulator@1 {
-		/delete-property/ gpio;
+		pinctrl-names = "default";
+		pinctrl-0 = <&vmmc_pins>;
+
+		compatible = "regulator-fixed";
+		regulator-name = "vmmc";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		regulator-boot-on;
 	};
 
 	beeper {

@@ -17,8 +17,16 @@
 	model = "EMAC SOM-3354M with SOM-200GS";
 
 	vmmc: fixedregulator@1 {
-		enable-active-high;
-        };
+		pinctrl-names = "default";
+		pinctrl-0 = <&vmmc_pins>;
+
+		compatible = "regulator-fixed";
+		regulator-name = "vmmc";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&gpio3 7 GPIO_ACTIVE_HIGH>;
+		regulator-boot-on;
+	};
 
 	sound {
 		compatible = "simple-audio-card";

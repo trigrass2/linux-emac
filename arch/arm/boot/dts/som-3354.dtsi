@@ -47,18 +47,6 @@
 		regulator-boot-on;
 	};
 
-	vmmc: fixedregulator@1 {
-		pinctrl-names = "default";
-		pinctrl-0 = <&vmmc_pins>;
-
-		compatible = "regulator-fixed";
-		regulator-name = "vmmc";
-		regulator-min-microvolt = <3300000>;
-		regulator-max-microvolt = <3300000>;
-		gpio = <&gpio3 7 GPIO_ACTIVE_LOW>;
-		regulator-boot-on;
-	};
-
 	backlight {
 		compatible = "pwm-backlight";
 		pwms = <&ecap2 0 50000 0>;
