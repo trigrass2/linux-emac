@@ -356,6 +356,16 @@ config TI_DAC5571
 
 	  If compiled as a module, it will be called ti-dac5571.
 
+config TLV5618A
+	tristate "TLV5618A DAC driver"
+	depends on SPI
+	help
+	  Say yes here to build the driver for the Texas Instruments
+	  TLV5618A DAC device.
+
+	  To compile this driver as a module, choose M here: the module
+	  will be called tlv5618a.
+
 config VF610_DAC
 	tristate "Vybrid vf610 DAC driver"
 	depends on OF
