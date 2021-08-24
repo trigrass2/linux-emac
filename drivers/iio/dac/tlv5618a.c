@@ -123,7 +123,6 @@ static const struct iio_chan_spec tlv5618a_channels[3][TLV5618A_NUM_CHAN] = {
 static const struct iio_info tlv5618a_info = {
 	.read_raw = &tlv5618a_read_raw,
 	.write_raw = &tlv5618a_write_raw,
-	.driver_module = THIS_MODULE,
 };
 
 static int tlv5618a_probe(struct spi_device *spi)
