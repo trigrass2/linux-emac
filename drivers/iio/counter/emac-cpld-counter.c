@@ -51,7 +51,6 @@ static int emac_counter_read_raw(struct iio_dev *indio_dev,
 }
 
 static const struct iio_info emac_counter_info = {
-	.driver_module = THIS_MODULE,
 	.read_raw = emac_counter_read_raw
 };
 
