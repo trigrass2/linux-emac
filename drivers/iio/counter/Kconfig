@@ -31,4 +31,10 @@ config STM32_LPTIMER_CNT
 
 	  To compile this driver as a module, choose M here: the
 	  module will be called stm32-lptimer-cnt.
+
+config EMAC_CPLD_COUNTER
+	tristate "EMAC CPLD counter driver"
+	depends on HAS_IOMEM
+	help
+	  Say yes here to build support for the simple counters in EMAC CPLDs.
 endmenu

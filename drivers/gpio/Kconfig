@@ -196,6 +196,13 @@ config GPIO_EM
 	help
 	  Say yes here to support GPIO on Renesas Emma Mobile SoCs.
 
+config GPIO_EMAC_CPLD
+	tristate "EMAC CPLD GPIO Support"
+	depends on OF_GPIO
+	select GPIO_GENERIC
+	help
+	  Say yes here to support EMAC CPLD GPIO.
+
 config GPIO_EP93XX
 	def_bool y
 	depends on ARCH_EP93XX
